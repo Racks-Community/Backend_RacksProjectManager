@@ -5,7 +5,7 @@ const { check } = require('express-validator')
  * Validates delete item request
  */
 const validateDeleteUser = [
-  check('id')
+  check('address')
     .exists()
     .withMessage('MISSING')
     .not()

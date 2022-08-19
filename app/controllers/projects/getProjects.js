@@ -29,9 +29,12 @@ const getProjects = async (req, res) => {
     )
 
     let racksPMSigner = racksPM.connect(wallet)
-    let projects = await racksPMSigner.getProjects()
-    console.log(projects)
-    res.status(200).json(await getItems(req, Project, query))
+    let projectsAddresses = await racksPMSigner.getProjects()
+    let projects = await getItems(req, Project, query)
+    projects = projects.docs.filter((project) =>
+      projectsAddresses.includes(project.address)
+    )
+    res.status(200).json(projects)
   } catch (error) {
     handleError(res, error)
   }

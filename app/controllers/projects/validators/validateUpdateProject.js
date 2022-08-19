@@ -5,48 +5,18 @@ const { check } = require('express-validator')
  * Validates update item request
  */
 const validateUpdateProject = [
-  check('name')
+  check('address')
     .exists()
     .withMessage('MISSING')
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
-  check('description')
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
-  check('reputationLevel')
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
-  check('colateralCost')
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
-  check('maxContributorsNumber')
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
-  check('githubRepository')
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
+    .withMessage('IS_EMPTY'),
+  check('name').optional(),
+  check('description').optional(),
+  check('reputationLevel').optional(),
+  check('colateralCost').optional(),
+  check('maxContributorsNumber').optional(),
+  check('githubRepository').optional(),
   (req, res, next) => {
     validateResult(req, res, next)
   }

@@ -11,9 +11,7 @@ const createItemInDb = ({
   email = '',
   password = '',
   role = '',
-  phone = '',
-  city = '',
-  country = ''
+  address = ''
 }) => {
   return new Promise((resolve, reject) => {
     const user = new User({
@@ -21,9 +19,7 @@ const createItemInDb = ({
       email,
       password,
       role,
-      phone,
-      city,
-      country,
+      address,
       verification: uuid.v4()
     })
     user.save((err, item) => {

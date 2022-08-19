@@ -19,19 +19,16 @@ const EventSchema = new mongoose.Schema(
     reputationLevel: {
       type: Number,
       default: 1,
-      select: false,
       required: true
     },
     colateralCost: {
       type: Number,
       default: 0,
-      select: false,
       required: true
     },
     maxContributorsNumber: {
       type: Number,
       default: 0,
-      select: false,
       required: true
     },
     address: {

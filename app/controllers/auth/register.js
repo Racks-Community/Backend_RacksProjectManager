@@ -1,7 +1,7 @@
 const { matchedData } = require('express-validator')
 
 const { registerUser, setUserInfo, returnRegisterToken } = require('./helpers')
-
+const { validateHolderInternal } = require('../../middleware/auth')
 const { handleError } = require('../../middleware/utils')
 const {
   emailExists,
@@ -19,6 +19,9 @@ const register = async (req, res) => {
     const locale = req.getLocale()
     req = matchedData(req)
     const doesEmailExists = await emailExists(req.email)
+    const isHolder = await validateHolderInternal(req.address)
+    if (isHolder < 1)
+      return res.status(404).json({ message: 'you need at least 1 token' })
     if (!doesEmailExists) {
       const item = await registerUser(req)
       const userInfo = await setUserInfo(item)

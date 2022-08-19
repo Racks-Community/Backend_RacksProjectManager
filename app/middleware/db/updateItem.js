@@ -26,4 +26,25 @@ const updateItem = (id = '', model = {}, req = {}) => {
   })
 }
 
-module.exports = { updateItem }
+const updateItemSearch = (params = {}, model = {}, req = {}) => {
+  return new Promise((resolve, reject) => {
+    model.find(
+      params,
+      req,
+      {
+        new: true,
+        runValidators: true
+      },
+      async (err, item) => {
+        try {
+          await itemNotFound(err, item, 'NOT_FOUND')
+          resolve(item)
+        } catch (error) {
+          reject(error)
+        }
+      }
+    )
+  })
+}
+
+module.exports = { updateItem, updateItemSearch }

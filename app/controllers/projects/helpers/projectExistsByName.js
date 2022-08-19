@@ -5,7 +5,7 @@ const { buildErrObject } = require('../../../middleware/utils')
  * Checks if a city already exists in database
  * @param {string} name - name of item
  */
-const projectExists = (name = '') => {
+const projectExistsByName = (name = '') => {
   return new Promise((resolve, reject) => {
     Project.findOne(
       {
@@ -25,4 +25,4 @@ const projectExists = (name = '') => {
   })
 }
 
-module.exports = { projectExists }
+module.exports = { projectExistsByName }

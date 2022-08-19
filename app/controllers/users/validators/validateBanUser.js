@@ -2,10 +2,16 @@ const { validateResult } = require('../../../middleware/utils')
 const { check } = require('express-validator')
 
 /**
- * Validates get item request
+ * Validates update item request
  */
-const validateGetProject = [
+const validateBanUser = [
   check('address')
+    .exists()
+    .withMessage('MISSING')
+    .not()
+    .isEmpty()
+    .withMessage('IS_EMPTY'),
+  check('banned')
     .exists()
     .withMessage('MISSING')
     .not()
@@ -16,4 +22,4 @@ const validateGetProject = [
   }
 ]
 
-module.exports = { validateGetProject }
+module.exports = { validateBanUser }

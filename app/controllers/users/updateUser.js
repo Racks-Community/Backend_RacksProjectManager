@@ -1,9 +1,9 @@
 const User = require('../../models/user')
 const { matchedData } = require('express-validator')
 const { isIDGood, handleError } = require('../../middleware/utils')
-const { updateItem } = require('../../middleware/db')
-const { emailExistsExcludingMyself } = require('../../middleware/emailer')
-
+const { updateItemSearch } = require('../../middleware/db')
+const { validateHolderInternal } = require('../../middleware/auth')
+const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 /**
  * Update item function called by route
  * @param {Object} req - request object
@@ -11,12 +11,22 @@ const { emailExistsExcludingMyself } = require('../../middleware/emailer')
  */
 const updateUser = async (req, res) => {
   try {
+    const tokenEncrypted = req.headers.authorization
+      .replace('Bearer ', '')
+      .trim()
     req = matchedData(req)
-    const id = await isIDGood(req.id)
-    const doesEmailExists = await emailExistsExcludingMyself(id, req.email)
-    if (!doesEmailExists) {
-      res.status(200).json(await updateItem(id, User, req))
-    }
+    const isHolder = await validateHolderInternal(req.address)
+    if (isHolder < 1)
+      return res.status(404).json({ message: 'you need at least 1 token' })
+
+    let userId = await getUserIdFromToken(tokenEncrypted)
+    userId = await isIDGood(userId)
+    const user = await findUserById(userId)
+    if (user.address !== req.address)
+      return res.status(409).json({ message: 'Integrity violation' })
+    res
+      .status(200)
+      .json(await updateItemSearch({ address: user.address }, User, req))
   } catch (error) {
     handleError(res, error)
   }

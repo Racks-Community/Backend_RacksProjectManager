@@ -17,4 +17,17 @@ const deleteItem = (id = '', model = {}) => {
   })
 }
 
-module.exports = { deleteItem }
+const deleteItemSearch = (params = {}, model = {}) => {
+  return new Promise((resolve, reject) => {
+    model.find(params, async (err, item) => {
+      try {
+        await itemNotFound(err, item, 'NOT_FOUND')
+        resolve(buildSuccObject('DELETED'))
+      } catch (error) {
+        reject(error)
+      }
+    })
+  })
+}
+
+module.exports = { deleteItem, deleteItemSearch }

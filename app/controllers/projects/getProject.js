@@ -1,7 +1,7 @@
 const { matchedData } = require('express-validator')
 const Project = require('../../models/project')
-const { getItem } = require('../../middleware/db')
-const { isIDGood, handleError } = require('../../middleware/utils')
+const { getItemSearch } = require('../../middleware/db')
+const { handleError } = require('../../middleware/utils')
 
 /**
  * Get item function called by route
@@ -11,8 +11,7 @@ const { isIDGood, handleError } = require('../../middleware/utils')
 const getProject = async (req, res) => {
   try {
     req = matchedData(req)
-    const id = await isIDGood(req.id)
-    res.status(200).json(await getItem(id, Project))
+    res.status(200).json(await getItemSearch({ address: req.address }, Project))
   } catch (error) {
     handleError(res, error)
   }

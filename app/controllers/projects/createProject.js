@@ -3,7 +3,7 @@ const { createItem } = require('../../middleware/db')
 const ethers = require('ethers')
 const { handleError } = require('../../middleware/utils')
 const { matchedData } = require('express-validator')
-const { projectExists } = require('./helpers')
+const { projectExistsByName, projectExistsByAddress } = require('./helpers')
 const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
 
 /**
@@ -14,7 +14,7 @@ const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
 const createProject = async (req, res) => {
   try {
     req = matchedData(req)
-    const doesProjectExists = await projectExists(req.name)
+    const doesProjectExists = await projectExistsByName(req.name)
     if (!doesProjectExists) {
       const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
 
@@ -32,7 +32,6 @@ const createProject = async (req, res) => {
         RacksPmAbi,
         provider
       )
-
       let racksPMSigner = racksPM.connect(wallet)
       let tx = await racksPMSigner.createProject(
         req.colateralCost,
@@ -42,8 +41,18 @@ const createProject = async (req, res) => {
       await tx.wait()
 
       racksPM.on('newProjectCreated', async (newProjectAddress) => {
-        req.address = newProjectAddress
-        res.status(201).json(await createItem(req, Project))
+        const doesProjectExistsName = await projectExistsByName(req.name)
+        const doesProjectExistsAddress = await projectExistsByAddress(
+          newProjectAddress
+        )
+        if (!doesProjectExistsName && !doesProjectExistsAddress) {
+          try {
+            req.address = newProjectAddress
+            res.status(201).json(await createItem(req, Project))
+          } catch (error) {
+            handleError(res, error)
+          }
+        }
       })
     }
   } catch (error) {

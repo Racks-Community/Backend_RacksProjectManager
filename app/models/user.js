@@ -35,6 +35,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    contributor: {
+      type: Boolean,
+      default: false
+    },
     banned: {
       type: Boolean,
       default: false
@@ -72,18 +76,15 @@ const UserSchema = new mongoose.Schema(
     },
     reputationLevel: {
       type: Number,
-      default: 1,
-      select: false
+      default: 1
     },
     reputationPoints: {
       type: Number,
-      default: 0,
-      select: false
+      default: 0
     },
     totalProjects: {
       type: Number,
-      default: 0,
-      select: false
+      default: 0
     },
     blockExpires: {
       type: Date,
