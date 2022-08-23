@@ -15,6 +15,7 @@ const {
   getUser,
   updateUser,
   updateUserToContributor,
+  banContributor,
   deleteUser
 } = require('../controllers/users')
 
@@ -22,6 +23,7 @@ const {
   validateCreateUser,
   validateGetUser,
   validateUpdateUser,
+  validateUpdateUserToContributor,
   validateDeleteUser,
   validateBanUser
 } = require('../controllers/users/validators')
@@ -69,7 +71,7 @@ router.get(
  * Update item route
  */
 router.patch(
-  '/',
+  '/:address',
   requireAuth,
   roleAuthorization(['user']),
   trimRequest.all,
@@ -81,11 +83,11 @@ router.patch(
  * Upgrade to Contributor
  */
 router.patch(
-  '/contributor',
+  '/contributor/:address',
   requireAuth,
   roleAuthorization(['user']),
   trimRequest.all,
-  validateUpdateUser,
+  validateUpdateUserToContributor,
   updateUserToContributor
 )
 
@@ -93,19 +95,19 @@ router.patch(
  * Ban User
  */
 router.patch(
-  '/ban',
+  '/ban/:address',
   requireAuth,
-  roleAuthorization(['user']),
+  roleAuthorization(['admin']),
   trimRequest.all,
   validateBanUser,
-  updateUser
+  banContributor
 )
 
 /*
  * Delete item route
  */
 router.delete(
-  ':address',
+  '/:address',
   requireAuth,
   roleAuthorization(['admin']),
   trimRequest.all,

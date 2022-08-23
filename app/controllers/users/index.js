@@ -4,6 +4,7 @@ const { getUser } = require('./getUser')
 const { getUsers } = require('./getUsers')
 const { updateUser } = require('./updateUser')
 const { updateUserToContributor } = require('./updateUserToContributor')
+const { banContributor } = require('./banContributor')
 
 module.exports = {
   createUser,
@@ -11,5 +12,6 @@ module.exports = {
   getUser,
   getUsers,
   updateUser,
-  updateUserToContributor
+  updateUserToContributor,
+  banContributor
 }

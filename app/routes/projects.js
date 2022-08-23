@@ -15,6 +15,8 @@ const {
   createProject,
   getProject,
   updateProject,
+  addContributorToProject,
+  completeProject,
   deleteProject
 } = require('../controllers/projects')
 
@@ -22,6 +24,8 @@ const {
   validateCreateProject,
   validateGetProject,
   validateUpdateProject,
+  validateAddContributorToProject,
+  validateCompleteProject,
   validateDeleteProject
 } = require('../controllers/projects/validators')
 
@@ -40,7 +44,7 @@ router.get('/all', getAllProjects)
 router.get(
   '/',
   requireAuth,
-  roleAuthorization(['user', 'admin']),
+  roleAuthorization(['admin']),
   trimRequest.all,
   getProjects
 )
@@ -61,9 +65,9 @@ router.post(
  * Get item route
  */
 router.get(
-  '/:id',
+  '/:address',
   requireAuth,
-  roleAuthorization(['admin']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
   validateGetProject,
   getProject
@@ -73,7 +77,7 @@ router.get(
  * Update item route
  */
 router.patch(
-  '/:id',
+  '/:address',
   requireAuth,
   roleAuthorization(['admin']),
   trimRequest.all,
@@ -82,10 +86,34 @@ router.patch(
 )
 
 /*
+ * Add Contributor to project
+ */
+router.post(
+  '/add-contributor/:address',
+  requireAuth,
+  roleAuthorization(['user']),
+  trimRequest.all,
+  validateAddContributorToProject,
+  addContributorToProject
+)
+
+/*
+ * Add Contributor to project
+ */
+router.post(
+  '/completed/:address',
+  requireAuth,
+  roleAuthorization(['admin']),
+  trimRequest.all,
+  validateCompleteProject,
+  completeProject
+)
+
+/*
  * Delete item route
  */
 router.delete(
-  '/:id',
+  '/:address',
   requireAuth,
   roleAuthorization(['admin']),
   trimRequest.all,

@@ -56,15 +56,8 @@ const UserSchema = new mongoose.Schema(
       },
       lowercase: true
     },
-    urlGitHub: {
-      type: String,
-      validate: {
-        validator(v) {
-          return v === '' ? true : validator.isURL(v)
-        },
-        message: 'NOT_A_VALID_URL'
-      },
-      lowercase: true
+    githubUsername: {
+      type: String
     },
     country: {
       type: String

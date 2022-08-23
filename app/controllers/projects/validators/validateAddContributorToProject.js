@@ -4,23 +4,22 @@ const { check } = require('express-validator')
 /**
  * Validates update item request
  */
-const validateUpdateProject = [
+const validateAddContributorToProject = [
   check('address')
     .exists()
     .withMessage('MISSING')
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
-  check('name').optional(),
-  check('description').optional(),
-  check('status').optional(),
-  check('reputationLevel').optional(),
-  check('colateralCost').optional(),
-  check('maxContributorsNumber').optional(),
-  check('githubRepository').optional(),
+  check('contributorAddress')
+    .exists()
+    .withMessage('MISSING')
+    .not()
+    .isEmpty()
+    .withMessage('IS_EMPTY'),
   (req, res, next) => {
     validateResult(req, res, next)
   }
 ]
 
-module.exports = { validateUpdateProject }
+module.exports = { validateAddContributorToProject }

@@ -19,7 +19,7 @@ const deleteItem = (id = '', model = {}) => {
 
 const deleteItemSearch = (params = {}, model = {}) => {
   return new Promise((resolve, reject) => {
-    model.find(params, async (err, item) => {
+    model.findOneAndRemove(params, async (err, item) => {
       try {
         await itemNotFound(err, item, 'NOT_FOUND')
         resolve(buildSuccObject('DELETED'))

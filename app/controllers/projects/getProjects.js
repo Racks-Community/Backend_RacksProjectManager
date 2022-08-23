@@ -12,7 +12,8 @@ const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
 const getProjects = async (req, res) => {
   try {
     const query = await checkQueryString(req.query)
-    const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY
+
+    const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
     const CONTRACT_ADDRESS =
       process.env.CHAIN_ID in contractAddresses
         ? contractAddresses[process.env.CHAIN_ID]
@@ -20,7 +21,7 @@ const getProjects = async (req, res) => {
     const provider = new ethers.providers.JsonRpcProvider(
       process.env.RINKEBY_PROVIDER
     )
-    let wallet = new ethers.Wallet(USER_PRIVATE_KEY, provider)
+    let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
 
     const racksPM = new ethers.Contract(
       CONTRACT_ADDRESS.RacksProjectManager[0],

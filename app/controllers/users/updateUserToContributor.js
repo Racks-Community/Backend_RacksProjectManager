@@ -1,8 +1,9 @@
 const User = require('../../models/user')
 const { matchedData } = require('express-validator')
-const { handleError } = require('../../middleware/utils')
+const { isIDGood, handleError } = require('../../middleware/utils')
 const { updateItemSearch } = require('../../middleware/db')
 const { validateHolderInternal } = require('../../middleware/auth')
+const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
 const ethers = require('ethers')
 
@@ -13,10 +14,22 @@ const ethers = require('ethers')
  */
 const updateUserToContributor = async (req, res) => {
   try {
+    const tokenEncrypted = req.headers.authorization
+      .replace('Bearer ', '')
+      .trim()
+
     req = matchedData(req)
     const isHolder = await validateHolderInternal(req.address)
     if (isHolder < 1)
       return res.status(404).json({ message: 'you need at least 1 token' })
+
+    let userId = await getUserIdFromToken(tokenEncrypted)
+    userId = await isIDGood(userId)
+    const user = await findUserById(userId)
+    if (user.address !== req.address)
+      return res.status(409).json({ message: 'Integrity violation' })
+
+    const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY
 
     const CONTRACT_ADDRESS =
       process.env.CHAIN_ID in contractAddresses
@@ -31,9 +44,19 @@ const updateUserToContributor = async (req, res) => {
       RacksPmAbi,
       provider
     )
+    let wallet = new ethers.Wallet(USER_PRIVATE_KEY, provider)
+    let racksPMSigner = racksPM.connect(wallet)
+
+    try {
+      let tx = await racksPMSigner.registerContributor()
+      await tx.wait()
+    } catch (error) {
+      handleError(res, error)
+    }
 
     racksPM.on('newContributorRegistered', async (newContributorAddress) => {
-      if (newContributorAddress === req.address) {
+      const isContributor = await racksPM.isWalletContributor(req.address)
+      if (newContributorAddress === req.address && isContributor) {
         try {
           req.contributor = true
           res

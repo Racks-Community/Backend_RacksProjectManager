@@ -28,7 +28,7 @@ const updateItem = (id = '', model = {}, req = {}) => {
 
 const updateItemSearch = (params = {}, model = {}, req = {}) => {
   return new Promise((resolve, reject) => {
-    model.find(
+    model.findOneAndUpdate(
       params,
       req,
       {

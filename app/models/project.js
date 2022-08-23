@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose'),
+  Schema = mongoose.Schema
 const mongoosePaginate = require('mongoose-paginate-v2')
 const validator = require('validator')
 
@@ -11,6 +12,10 @@ const EventSchema = new mongoose.Schema(
     description: {
       type: String,
       required: true
+    },
+    status: {
+      type: String,
+      default: 'CREATED'
     },
     completed: {
       type: Boolean,
@@ -44,7 +49,8 @@ const EventSchema = new mongoose.Schema(
         message: 'NOT_A_VALID_URL'
       },
       lowercase: true
-    }
+    },
+    contributors: [{ type: Schema.Types.ObjectId, ref: 'User' }]
   },
   {
     versionKey: false,

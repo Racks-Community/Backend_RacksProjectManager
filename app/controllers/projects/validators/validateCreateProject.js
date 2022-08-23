@@ -40,13 +40,6 @@ const validateCreateProject = [
     .isEmpty()
     .withMessage('IS_EMPTY')
     .trim(),
-  check('githubRepository')
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
   (req, res, next) => {
     validateResult(req, res, next)
   }

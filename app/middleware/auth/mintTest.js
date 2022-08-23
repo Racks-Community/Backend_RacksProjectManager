@@ -8,8 +8,8 @@ const {
 
 const mintTest = async (req, res) => {
   try {
-    const USER_ADDRESS = process.env.USER_ADDRESS
-    const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY
+    const USER_ADDRESS = process.env.ADMIN_ADDRESS
+    const USER_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
 
     const CONTRACT_ADDRESS =
       process.env.CHAIN_ID in contractAddresses

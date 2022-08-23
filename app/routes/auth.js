@@ -30,6 +30,8 @@ const {
 
 const { mintTest } = require('../middleware/auth/mintTest')
 
+const { createLocalAdmin } = require('../middleware/auth/createLocalAdmin')
+
 const { validateHolder } = require('../middleware/auth/validateHolder')
 
 /*
@@ -75,6 +77,8 @@ router.post('/verify', trimRequest.all, validateVerify, verify)
 router.post('/loginnft', trimRequest.all, validateLoginNft, loginNft)
 
 router.get('/validateholder', trimRequest.all, validateHolder)
+
+router.post('/create-local-admin', trimRequest.all, createLocalAdmin)
 
 router.get('/mintTest', trimRequest.all, mintTest)
 

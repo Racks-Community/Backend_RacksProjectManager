@@ -16,11 +16,12 @@ const validateUpdateUser = [
   check('email').optional(),
   check('discord').optional(),
   check('country').optional(),
+  check('avatar').optional(),
   check('urlTwitter')
     .optional()
     .custom((v) => (v === '' ? true : validator.isURL(v)))
     .withMessage('NOT_A_VALID_URL'),
-  check('urlGitHub')
+  check('githubUsername')
     .optional()
     .custom((v) => (v === '' ? true : validator.isURL(v)))
     .withMessage('NOT_A_VALID_URL'),

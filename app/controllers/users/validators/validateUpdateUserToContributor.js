@@ -3,47 +3,43 @@ const validator = require('validator')
 const { check } = require('express-validator')
 
 /**
- * Validates update profile request
+ * Validates update item request
  */
-const validateUpdateProfile = [
-  check('name')
+const validateUpdateUserToContributor = [
+  check('address')
     .exists()
     .withMessage('MISSING')
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
-  check('phone')
+  check('name').optional(),
+  check('email')
     .exists()
     .withMessage('MISSING')
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
-  check('city')
+    .withMessage('IS_EMPTY'),
+  check('discord')
     .exists()
     .withMessage('MISSING')
     .not()
     .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
-  check('country')
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
+    .withMessage('IS_EMPTY'),
+  check('country').optional(),
+  check('avatar').optional(),
   check('urlTwitter')
     .optional()
     .custom((v) => (v === '' ? true : validator.isURL(v)))
     .withMessage('NOT_A_VALID_URL'),
-  check('urlGitHub')
-    .optional()
-    .custom((v) => (v === '' ? true : validator.isURL(v)))
-    .withMessage('NOT_A_VALID_URL'),
+  check('githubUsername')
+    .exists()
+    .withMessage('MISSING')
+    .not()
+    .isEmpty()
+    .withMessage('IS_EMPTY'),
   (req, res, next) => {
     validateResult(req, res, next)
   }
 ]
 
-module.exports = { validateUpdateProfile }
+module.exports = { validateUpdateUserToContributor }

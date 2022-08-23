@@ -5,7 +5,7 @@ const { handleError } = require('../../middleware/utils')
 const { matchedData } = require('express-validator')
 const { projectExistsByName, projectExistsByAddress } = require('./helpers')
 const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
-
+const { createRepository } = require('../../middleware/auth/githubManager')
 /**
  * Create item function called by route
  * @param {Object} req - request object
@@ -47,6 +47,10 @@ const createProject = async (req, res) => {
         )
         if (!doesProjectExistsName && !doesProjectExistsAddress) {
           try {
+            req.githubRepository = await createRepository(
+              req.name,
+              req.description
+            )
             req.address = newProjectAddress
             res.status(201).json(await createItem(req, Project))
           } catch (error) {
