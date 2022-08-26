@@ -7,6 +7,7 @@ const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 const {
   addRepositoryContributor
 } = require('../../middleware/auth/githubManager')
+const { grantRolesToMember } = require('../../middleware/auth/discordManager')
 const {
   contractAddresses,
   RacksPmAbi,
@@ -101,6 +102,7 @@ const addContributorToProject = async (req, res) => {
               projectModel.name,
               contributor.githubUsername
             )
+            await grantRolesToMember(projectModel.name, contributor.discord)
 
             res.status(200).json(await projectModel.save())
           } catch (error) {

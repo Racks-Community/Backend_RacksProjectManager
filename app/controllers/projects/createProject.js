@@ -6,6 +6,7 @@ const { matchedData } = require('express-validator')
 const { projectExistsByName, projectExistsByAddress } = require('./helpers')
 const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
 const { createRepository } = require('../../middleware/auth/githubManager')
+const { createChannels } = require('../../middleware/auth/discordManager')
 /**
  * Create item function called by route
  * @param {Object} req - request object
@@ -14,6 +15,7 @@ const { createRepository } = require('../../middleware/auth/githubManager')
 const createProject = async (req, res) => {
   try {
     req = matchedData(req)
+
     const doesProjectExists = await projectExistsByName(req.name)
     if (!doesProjectExists) {
       const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
@@ -52,6 +54,7 @@ const createProject = async (req, res) => {
               req.description
             )
             req.address = newProjectAddress
+            await createChannels(req.name)
             res.status(201).json(await createItem(req, Project))
           } catch (error) {
             handleError(res, error)

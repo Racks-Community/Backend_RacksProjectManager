@@ -4,6 +4,7 @@ const { isIDGood, handleError } = require('../../middleware/utils')
 const { updateItemSearch } = require('../../middleware/db')
 const { validateHolderInternal } = require('../../middleware/auth')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
+const { getInviteLink } = require('../../middleware/auth/discordManager')
 const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
 const ethers = require('ethers')
 
@@ -59,9 +60,8 @@ const updateUserToContributor = async (req, res) => {
       if (newContributorAddress === req.address && isContributor) {
         try {
           req.contributor = true
-          res
-            .status(200)
-            .json(await updateItemSearch({ address: req.address }, User, req))
+          await updateItemSearch({ address: req.address }, User, req)
+          res.status(200).json(await getInviteLink())
         } catch (error) {
           handleError(res, error)
         }
