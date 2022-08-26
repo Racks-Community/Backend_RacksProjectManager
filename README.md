@@ -1,10 +1,55 @@
-# Node.js express.js MongoDB JWT WEB 3 REST API
+# Racks Project Manager
 
-## Getting started
+## Relevant Endpoints
 
-This is a basic API REST skeleton written on JavaScript using async/await. Great for building a starter web API for your front-end (Android, iOS, Vue, react, angular, or anything that can consume an API)
+- POST /login
+- POST /loginNft
+- POST-GET /projects
+- PATCH /users/contributor/:address (Register contributor)
+- POST /projects/add-contributor/:address (Add contributor to project)
+- POST /projects/completed/:address (Complete project)
+- POST /create-local-admin (Create first Admin with local environment values)
 
-This project is created to help other developers create a **basic REST API in an easy way with Node.js**. This basic example shows how powerful and simple JavaScript can be. Do you want to contribute? Pull requests are always welcome to show more features.
+## Github
+
+We use Octokit (https://www.npmjs.com/package/octokit) to execute the Github API calls.
+
+```bash
+npm i octokit
+```
+
+- On Project Created, a new repository with the same name will be created in Racks Community Organization.
+- When a Contributor joins a project he receives an invitation to join the repository with write permissions.
+- After completting a project, the Contributor will receive an invitation to join the Racks Community Organization.
+
+## Discord
+
+We use the Discord Bot API implementation of discord.js to manage the Racks Dao Server.
+First I created a Discord Bot in the developers section (https://discord.com/developers/applications/)
+
+It must have Bot scope with the following permissions:
+- Manage Roles
+- Manage Channels
+- Create Instant Invite
+
+You can use and authorize the Bot I created just by clicking in this url as long as you are the owner of the Discord server
+https://discord.com/api/oauth2/authorize?client_id=1012037548362694758&permissions=268435473&scope=bot
+
+### Using discord.js
+
+```bash
+npm i discord.js
+```
+
+You can find the documentation of discord.js here: https://discord.js.org/#/docs/
+
+Our Discord Implementation:
+- On Project Created, a new role with the project's name is created
+- On Project Created, a new category channel with the associated text and voice channels will be created with the permissions set so only admins and members with the project role will be able to see and use the new channels.
+- When a holder upgrades to Contributor, he receives an invite to the Racks Dao Server.
+- When a Contributor joins a project, he will be granted with the project role so he has access to the respective channels.
+
+# Node.js express.js MongoDB JWT WEB 3 REST API // Base Documentation
 
 ## Features
 
@@ -37,32 +82,6 @@ This project is created to help other developers create a **basic REST API in an
 - Node.js **10+**
 - MongoDB **3.6+**
 - Redis **5.0+**
-
-## How to install
-
-### Using manual download ZIP
-
-1.  Download repository
-2.  Uncompress to your desired directory
-
-### Install npm dependencies after installing (Git or manual download)
-
-```bash
-cd myproject
-npm install
-npm update
-```
-
-### Setting up environments (development or production)
-
-1.  In the root this repository you will find a file named `.env.example`
-2.  Create a new file by copying and pasting the file and then renaming it to just `.env`
-3.  The file `.env` is already ignored, so you never commit your credentials.
-4.  Change the values of the file to your environment (development or production)
-5.  Upload the `.env` to your environment server(development or production)
-6.  If you use the postman collection to try the endpoints, change value of the variable `server` on your environment to the url of your server, for development mode use <http://localhost:3000>
-
-**IMPORTANT:** By default token expires in 3 days (4320 minutes set in .env.example). You can refresh token at endpoint GET /token. If everything it´s ok you will get a new token.
 
 ### Mailer
 
@@ -138,10 +157,6 @@ Lint your code with ESLint by typing:
 npm run lint
 ```
 
-## Usage
-
-Once everything is set up to test API routes either use Postman or any other api testing application. Default username/password combination for login is `admin@admin.com/12345`.
-
 ### API documentation
 
 <https://documenter.getpostman.com/view/3889100/VUjSHQDn>
@@ -155,30 +170,3 @@ Go to `manage environments` to create environments for development, production, 
 1.  Create a new key `authToken` and within the `/login` request this value is automatically updated after a successfull login through a script located in the `tests` tab. Each time you make a request to the API it will send `Authorization` header with the `token` value in the request, you can check this on the headers of users or cities endpoints in the Postman example.
 
 2.  Create a second key `server` with the url of your server, for development mode use <http://localhost:3000>
-
-This is a REST API, so it works using the following HTTP methods:
-
-- GET (Read): Gets a list of items, or a single item
-- POST (Create): Creates an item
-- PATCH (Update): Updates an item
-- DELETE: Deletes an item
-
-### Creating new models
-
-If you need to add more models to the project just create a new file in `/app/models/` and it will be loaded dynamically.
-
-### Creating new routes
-
-If you need to add more routes to the project just create a new file in `/app/routes/` and it will be loaded dynamically.
-
-### Creating new controllers
-
-When you create a new controller, try to also create another folder with validations and helpers. Ex. `/countries`, `/countries/validators` and `/countries/helpers`. An example of this is included in the repository.
-
-## Bugs or improvements
-
-Feel free to report any bugs or improvements. Pull requests are always welcome.
-
-## License
-
-This project is open-sourced software licensed under the MIT License. See the LICENSE file for more information.
