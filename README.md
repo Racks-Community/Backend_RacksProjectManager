@@ -28,6 +28,7 @@ We use the Discord Bot API implementation of discord.js to manage the Racks Dao 
 First I created a Discord Bot in the developers section (https://discord.com/developers/applications/)
 
 It must have Bot scope with the following permissions:
+
 - Manage Roles
 - Manage Channels
 - Create Instant Invite
@@ -44,6 +45,7 @@ npm i discord.js
 You can find the documentation of discord.js here: https://discord.js.org/#/docs/
 
 Our Discord Implementation:
+
 - On Project Created, a new role with the project's name is created
 - On Project Created, a new category channel with the associated text and voice channels will be created with the permissions set so only admins and members with the project role will be able to see and use the new channels.
 - When a holder upgrades to Contributor, he receives an invite to the Racks Dao Server.
@@ -156,17 +158,3 @@ Lint your code with ESLint by typing:
 ```bash
 npm run lint
 ```
-
-### API documentation
-
-<https://documenter.getpostman.com/view/3889100/VUjSHQDn>
-
-### Postman API example collection
-
-You can import the example collection to Postman. To import, click the import button located and select `postman-example.json` located within the root directory.
-
-Go to `manage environments` to create environments for development, production, etc. On each of the environments you create you will need to:
-
-1.  Create a new key `authToken` and within the `/login` request this value is automatically updated after a successfull login through a script located in the `tests` tab. Each time you make a request to the API it will send `Authorization` header with the `token` value in the request, you can check this on the headers of users or cities endpoints in the Postman example.
-
-2.  Create a second key `server` with the url of your server, for development mode use <http://localhost:3000>

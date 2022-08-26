@@ -1,4 +1,3 @@
-const { handleError } = require('../utils/handleError')
 const { Octokit } = require('octokit')
 
 const octokit = new Octokit({
