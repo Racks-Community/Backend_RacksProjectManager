@@ -7,10 +7,10 @@ const setUserInfo = (req = {}) => {
     let user = {
       _id: req._id,
       name: req.name,
-      role: 'user',
-      email:  req.email ? req.email : req.address + '@racks.com' ,
+      role: req.role,
+      email: req.email ? req.email : req.address + '@racks.com',
       address: req.address,
-      verified: req.verified
+      contributor: req.contributor
     }
     // Adds verification for testing purposes
     if (process.env.NODE_ENV !== 'production') {
