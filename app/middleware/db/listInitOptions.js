@@ -12,7 +12,7 @@ const listInitOptions = (req = {}) => {
       const sort = req.query.sort || 'createdAt'
       const sortBy = buildSort(sort, order)
       const page = parseInt(req.query.page, 10) || 1
-      const limit = parseInt(req.query.limit, 10) || 5
+      const limit = parseInt(req.query.limit, 10) || 100
       const options = {
         sort: sortBy,
         lean: true,

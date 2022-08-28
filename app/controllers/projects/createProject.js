@@ -49,13 +49,14 @@ const createProject = async (req, res) => {
         )
         if (!doesProjectExistsName && !doesProjectExistsAddress) {
           try {
+            req.address = newProjectAddress
+            const saveRes = await createItem(req, Project)
             req.githubRepository = await createRepository(
               req.name,
               req.description
             )
-            req.address = newProjectAddress
             await createChannels(req.name)
-            res.status(201).json(await createItem(req, Project))
+            res.status(201).json(saveRes)
           } catch (error) {
             handleError(res, error)
           }

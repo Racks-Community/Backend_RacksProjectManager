@@ -34,11 +34,6 @@ const {
  */
 
 /*
- * Get all items route
- */
-router.get('/all', getAllProjects)
-
-/*
  * Get items route
  */
 router.get(

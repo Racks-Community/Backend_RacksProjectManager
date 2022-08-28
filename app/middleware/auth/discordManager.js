@@ -20,7 +20,7 @@ const createChannels = async (name) => {
         try {
           const guild = await client.guilds.fetch(guildId)
 
-          guild.roles.create({
+          await guild.roles.create({
             name: name,
             color: Colors.Blue,
             reason: 'new project'
@@ -66,14 +66,12 @@ const createChannels = async (name) => {
           await guild.channels.create({
             name: 'Project Chat',
             type: ChannelType.GuildText,
-            permissionOverwrites: permissionArgs,
             parent: category.id
           })
 
           await guild.channels.create({
             name: 'Project Team',
             type: ChannelType.GuildVoice,
-            permissionOverwrites: permissionArgs,
             parent: category.id
           })
           resolve()
@@ -120,7 +118,6 @@ const grantRolesToMember = async (projectName, username) => {
         memberList.map(async (member) => {
           if (member.displayName == username) {
             await member.roles.add(projectRole)
-            console.log(member)
           }
         })
         resolve()
