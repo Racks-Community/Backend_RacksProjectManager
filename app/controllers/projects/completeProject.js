@@ -52,12 +52,15 @@ const completeProject = async (req, res) => {
         contributor.reputationLevel = contributorOnChain.reputationLevel
         contributor.reputationPoints = contributorOnChain.reputationPoints
         await contributor.save()
-        await addOrganizationContributor(
-          contributor.githubUsername,
-          contributor.email
-        )
+        const resData = await projectModel.save()
+        if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
+          await addOrganizationContributor(
+            contributor.githubUsername,
+            contributor.email
+          )
+        }
       }
-      res.status(200).json(await projectModel.save())
+      res.status(200).json(resData)
     }
   } catch (error) {
     handleError(res, error)

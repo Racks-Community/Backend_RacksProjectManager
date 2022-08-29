@@ -51,11 +51,15 @@ const createProject = async (req, res) => {
           try {
             req.address = newProjectAddress
             const saveRes = await createItem(req, Project)
-            req.githubRepository = await createRepository(
-              req.name,
-              req.description
-            )
-            await createChannels(req.name)
+            if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
+              req.githubRepository = await createRepository(
+                req.name,
+                req.description
+              )
+            }
+            if (process.env.DISCORD_BOT_TOKEN != 'void') {
+              await createChannels(req.name)
+            }
             res.status(201).json(saveRes)
           } catch (error) {
             handleError(res, error)
