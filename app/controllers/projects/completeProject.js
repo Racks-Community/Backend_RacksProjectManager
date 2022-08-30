@@ -36,7 +36,7 @@ const completeProject = async (req, res) => {
     )
     await tx.wait()
 
-    const completed = await project.completed()
+    const completed = await project.isCompleted()
     if (completed) {
       let projectModel = (
         await getItemSearch({ address: req.address }, Project)
@@ -45,7 +45,7 @@ const completeProject = async (req, res) => {
       projectModel.status = 'FINISHED'
       const numContributors = await project.getContributorsNumber()
       for (let i = 0; i < numContributors; i++) {
-        const contributorOnChain = await project.projectContributors(i)
+        const contributorOnChain = await project.getProjectContributor(i)
         let contributor = (
           await getItemSearch({ address: contributorOnChain.wallet }, User)
         )[0]

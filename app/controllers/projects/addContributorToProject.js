@@ -76,7 +76,7 @@ const addContributorToProject = async (req, res) => {
     project.on(
       'newProjectContributorsRegistered',
       async (newProjectContributorAddress) => {
-        const isProjectContributor = await project.walletIsProjectContributor(
+        const isProjectContributor = await project.isInProjectContributor(
           req.contributorAddress
         )
         if (
