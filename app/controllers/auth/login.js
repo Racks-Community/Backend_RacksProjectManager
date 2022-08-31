@@ -21,16 +21,20 @@ const login = async (req, res) => {
   try {
     const data = matchedData(req)
     const user = await findUserByEmail(data.email)
-    await userIsBlocked(user)
-    await checkLoginAttemptsAndBlockExpires(user)
-    const isPasswordMatch = await checkPassword(data.password, user)
-    if (!isPasswordMatch) {
-      handleError(res, await passwordsDoNotMatch(user))
+    if (user) {
+      await userIsBlocked(user)
+      await checkLoginAttemptsAndBlockExpires(user)
+      const isPasswordMatch = await checkPassword(data.password, user)
+      if (!isPasswordMatch) {
+        handleError(res, await passwordsDoNotMatch(user))
+      } else {
+        // all ok, register access and return token
+        user.loginAttempts = 0
+        await saveLoginAttemptsToDB(user)
+        res.status(200).json(await saveUserAccessAndReturnToken(req, user))
+      }
     } else {
-      // all ok, register access and return token
-      user.loginAttempts = 0
-      await saveLoginAttemptsToDB(user)
-      res.status(200).json(await saveUserAccessAndReturnToken(req, user))
+      res.status(404).json('User not found')
     }
   } catch (error) {
     handleError(res, error)
