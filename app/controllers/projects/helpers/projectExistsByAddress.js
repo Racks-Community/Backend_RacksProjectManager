@@ -17,7 +17,7 @@ const projectExistsByAddress = (address = '') => {
         }
 
         if (item) {
-          return reject(buildErrObject(422, 'PROJECT_ALREADY_EXISTS'))
+          return resolve(true)
         }
         resolve(false)
       }

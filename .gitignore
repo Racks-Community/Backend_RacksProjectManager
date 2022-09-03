@@ -86,3 +86,7 @@ public/reports/*
 
 # exception to the medias
 !public/reports/.gitkeep 
+
+web3Constants/networkMapping.json
+web3Constants/polygon
+web3Constants/rinkeby

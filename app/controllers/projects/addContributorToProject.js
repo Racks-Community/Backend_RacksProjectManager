@@ -13,7 +13,7 @@ const {
   RacksPmAbi,
   MockErc20Abi,
   ProjectAbi
-} = require('../../../web3Constanst')
+} = require('../../../web3Constants')
 const ethers = require('ethers')
 
 /**

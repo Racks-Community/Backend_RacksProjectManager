@@ -2,7 +2,7 @@ const Project = require('../../models/project')
 const { checkQueryString, getItems } = require('../../middleware/db')
 const { handleError } = require('../../middleware/utils')
 const ethers = require('ethers')
-const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
+const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
 
 /**
  * Get items function called by route

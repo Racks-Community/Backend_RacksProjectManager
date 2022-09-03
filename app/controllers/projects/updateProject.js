@@ -2,7 +2,7 @@ const Project = require('../../models/project')
 const { updateItemSearch } = require('../../middleware/db')
 const { handleError } = require('../../middleware/utils')
 const { matchedData } = require('express-validator')
-const { ProjectAbi } = require('../../../web3Constanst')
+const { ProjectAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
 
 /**

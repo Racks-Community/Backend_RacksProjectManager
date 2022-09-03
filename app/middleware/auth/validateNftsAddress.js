@@ -1,5 +1,5 @@
 const ethers = require('ethers')
-const { contractAddresses, MrCryptoAbi } = require('../../../web3Constanst')
+const { contractAddresses, MrCryptoAbi } = require('../../../web3Constants')
 
 const validateNftsAddress = (nftn) => {
   return new Promise(async (resolve, reject) => {

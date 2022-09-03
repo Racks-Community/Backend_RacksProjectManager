@@ -1,12 +1,16 @@
 const Project = require('../../models/project')
+const PendingProject = require('../../models/pendingProject')
 const { createItem } = require('../../middleware/db')
 const ethers = require('ethers')
 const { handleError } = require('../../middleware/utils')
+const { getItemSearch, deleteItemSearch } = require('../../middleware/db')
 const { matchedData } = require('express-validator')
 const { projectExistsByName, projectExistsByAddress } = require('./helpers')
-const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
+const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
 const { createRepository } = require('../../middleware/auth/githubManager')
 const { createChannels } = require('../../middleware/auth/discordManager')
+const { removeListener } = require('../../models/project')
+const { Linter } = require('eslint')
 /**
  * Create item function called by route
  * @param {Object} req - request object
@@ -15,6 +19,7 @@ const { createChannels } = require('../../middleware/auth/discordManager')
 const createProject = async (req, res) => {
   try {
     req = matchedData(req)
+    let saveRes = null
 
     const doesProjectExists = await projectExistsByName(req.name)
     if (!doesProjectExists) {
@@ -35,37 +40,66 @@ const createProject = async (req, res) => {
         provider
       )
       let racksPMSigner = racksPM.connect(wallet)
+
+      await createItem(req, PendingProject)
+
       let tx = await racksPMSigner.createProject(
+        req.name,
         req.colateralCost,
         req.reputationLevel,
         req.maxContributorsNumber
       )
       await tx.wait()
-
-      racksPM.on('newProjectCreated', async (newProjectAddress) => {
-        const doesProjectExistsName = await projectExistsByName(req.name)
-        const doesProjectExistsAddress = await projectExistsByAddress(
-          newProjectAddress
-        )
-        if (!doesProjectExistsName && !doesProjectExistsAddress) {
+      racksPM.on(
+        'newProjectCreated',
+        async (newProjectName, newProjectAddress) => {
           try {
-            req.address = newProjectAddress
-            const saveRes = await createItem(req, Project)
-            if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
-              req.githubRepository = await createRepository(
-                req.name,
-                req.description
-              )
+            const doesProjectExistsName = await projectExistsByName(
+              newProjectName
+            )
+            const doesProjectExistsAddress = await projectExistsByAddress(
+              newProjectAddress
+            )
+            if (!doesProjectExistsName && !doesProjectExistsAddress) {
+              try {
+                let pendingCustomer = (
+                  await getItemSearch({ name: newProjectName }, PendingProject)
+                )[0]
+                const newProject = {
+                  name: pendingCustomer.name,
+                  description: pendingCustomer.description,
+                  reputationLevel: pendingCustomer.reputationLevel,
+                  colateralCost: pendingCustomer.colateralCost,
+                  maxContributorsNumber: pendingCustomer.maxContributorsNumber,
+                  address: newProjectAddress
+                }
+                saveRes = await createItem(newProject, Project)
+                if (saveRes) {
+                  await deleteItemSearch(
+                    { name: newProjectName },
+                    PendingProject
+                  )
+                }
+                if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
+                  req.githubRepository = await createRepository(
+                    pendingCustomer.name,
+                    pendingCustomer.description
+                  )
+                }
+                if (process.env.DISCORD_BOT_TOKEN != 'void') {
+                  await createChannels(pendingCustomer.name)
+                }
+                racksPM.removeAllListeners()
+              } catch (error) {
+                handleError(res, error)
+              }
             }
-            if (process.env.DISCORD_BOT_TOKEN != 'void') {
-              await createChannels(req.name)
-            }
-            res.status(201).json(saveRes)
           } catch (error) {
             handleError(res, error)
           }
         }
-      })
+      )
+      return res.send()
     }
   } catch (error) {
     handleError(res, error)

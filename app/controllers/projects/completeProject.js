@@ -6,7 +6,7 @@ const { getItemSearch } = require('../../middleware/db')
 const {
   addOrganizationContributor
 } = require('../../middleware/auth/githubManager')
-const { ProjectAbi } = require('../../../web3Constanst')
+const { ProjectAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
 
 /**

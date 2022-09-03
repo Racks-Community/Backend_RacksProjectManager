@@ -1,6 +1,6 @@
 const { handleError } = require('../utils/handleError')
 const ethers = require('ethers')
-const { contractAddresses, MrCryptoAbi } = require('../../../web3Constanst')
+const { contractAddresses, MrCryptoAbi } = require('../../../web3Constants')
 
 const validateHolder = async (req, res, next) => {
   try {
