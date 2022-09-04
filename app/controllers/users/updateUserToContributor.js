@@ -5,7 +5,7 @@ const { updateItemSearch } = require('../../middleware/db')
 const { validateHolderInternal } = require('../../middleware/auth')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 const { getInviteLink } = require('../../middleware/auth/discordManager')
-const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
+const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
 
 /**

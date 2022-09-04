@@ -62,15 +62,15 @@ const createProject = async (req, res) => {
             )
             if (!doesProjectExistsName && !doesProjectExistsAddress) {
               try {
-                let pendingCustomer = (
+                let pendingProject = (
                   await getItemSearch({ name: newProjectName }, PendingProject)
                 )[0]
                 const newProject = {
-                  name: pendingCustomer.name,
-                  description: pendingCustomer.description,
-                  reputationLevel: pendingCustomer.reputationLevel,
-                  colateralCost: pendingCustomer.colateralCost,
-                  maxContributorsNumber: pendingCustomer.maxContributorsNumber,
+                  name: pendingProject.name,
+                  description: pendingProject.description,
+                  reputationLevel: pendingProject.reputationLevel,
+                  colateralCost: pendingProject.colateralCost,
+                  maxContributorsNumber: pendingProject.maxContributorsNumber,
                   address: newProjectAddress
                 }
                 saveRes = await createItem(newProject, Project)
@@ -82,17 +82,19 @@ const createProject = async (req, res) => {
                 }
                 if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
                   req.githubRepository = await createRepository(
-                    pendingCustomer.name,
-                    pendingCustomer.description
+                    pendingProject.name,
+                    pendingProject.description
                   )
                 }
                 if (process.env.DISCORD_BOT_TOKEN != 'void') {
-                  await createChannels(pendingCustomer.name)
+                  await createChannels(pendingProject.name)
                 }
                 racksPM.removeAllListeners()
               } catch (error) {
                 handleError(res, error)
               }
+            } else {
+              await deleteItemSearch({ name: newProjectName }, PendingProject)
             }
           } catch (error) {
             handleError(res, error)

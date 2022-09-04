@@ -3,7 +3,7 @@ const { matchedData } = require('express-validator')
 const { handleError } = require('../../middleware/utils')
 const { updateItemSearch } = require('../../middleware/db')
 const { validateHolderInternal } = require('../../middleware/auth')
-const { contractAddresses, RacksPmAbi } = require('../../../web3Constanst')
+const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
 
 /**
