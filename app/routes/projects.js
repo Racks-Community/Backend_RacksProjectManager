@@ -10,9 +10,9 @@ const trimRequest = require('trim-request')
 const { roleAuthorization } = require('../controllers/auth')
 
 const {
-  getAllProjects,
   getProjects,
   createProject,
+  createProjectWebhook,
   getProject,
   updateProject,
   addContributorToProject,
@@ -22,6 +22,7 @@ const {
 
 const {
   validateCreateProject,
+  validateCreateProjectWebhook,
   validateGetProject,
   validateUpdateProject,
   validateAddContributorToProject,
@@ -39,13 +40,13 @@ const {
 router.get(
   '/',
   requireAuth,
-  roleAuthorization(['admin']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
   getProjects
 )
 
 /*
- * Create new item route
+ * Call Contract's CreateProject function
  */
 router.post(
   '/',
@@ -54,6 +55,18 @@ router.post(
   trimRequest.all,
   validateCreateProject,
   createProject
+)
+
+/*
+ * CreateProject webhook endpoint
+ */
+router.post(
+  '/webhook',
+  requireAuth,
+  roleAuthorization(['admin']),
+  trimRequest.all,
+  validateCreateProjectWebhook,
+  createProjectWebhook
 )
 
 /*

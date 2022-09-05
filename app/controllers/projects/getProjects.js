@@ -1,8 +1,7 @@
 const Project = require('../../models/project')
 const { checkQueryString, getItems } = require('../../middleware/db')
-const { handleError } = require('../../middleware/utils')
-const ethers = require('ethers')
-const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
+const { isIDGood, handleError } = require('../../middleware/utils')
+const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 
 /**
  * Get items function called by route
@@ -11,31 +10,26 @@ const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
  */
 const getProjects = async (req, res) => {
   try {
+    const tokenEncrypted = req.headers.authorization
+      .replace('Bearer ', '')
+      .trim()
     const query = await checkQueryString(req.query)
 
-    const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
-    const CONTRACT_ADDRESS =
-      process.env.CHAIN_ID in contractAddresses
-        ? contractAddresses[process.env.CHAIN_ID]
-        : null
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RINKEBY_PROVIDER
-    )
-    let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
+    let userId = await getUserIdFromToken(tokenEncrypted)
+    userId = await isIDGood(userId)
+    const user = await findUserById(userId)
 
-    const racksPM = new ethers.Contract(
-      CONTRACT_ADDRESS.RacksProjectManager[0],
-      RacksPmAbi,
-      provider
-    )
-
-    let racksPMSigner = racksPM.connect(wallet)
-    let projectsAddresses = await racksPMSigner.getProjects()
     let projects = await getItems(req, Project, query)
-    projects = projects.docs.filter((project) =>
-      projectsAddresses.includes(project.address)
-    )
-    res.status(200).json(projects)
+    projects = projects.docs
+    if (user.role == 'admin') {
+      return res.status(200).send(projects)
+    } else {
+      projects = projects.filter(
+        (project) => project.reputationLevel <= user.reputationLevel
+      )
+      return res.status(200).send(projects)
+    }
+    res.status(500).send()
   } catch (error) {
     handleError(res, error)
   }
