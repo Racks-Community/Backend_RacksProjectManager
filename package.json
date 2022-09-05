@@ -1,5 +1,5 @@
 {
-  "name": "node-express-mongodb-jwt-rest-api-web-3",
+  "name": "backend-racks-project-manager",
   "version": "9.0.5",
   "description": "Node.js express.js MongoDB JWT SOLIDITY REST API - This is a basic API REST skeleton written on JavaScript using async/await. Great for building a starter web API for your front-end (Android, iOS, Vue, react, angular, or anything that can consume an API)",
   "license": "MIT",
@@ -14,6 +14,7 @@
     "test:unit": "cross-env NODE_ENV=test jest --coverage",
     "test:e2e": "cross-env NODE_ENV=test npm run fresh && npm run mocha",
     "dev": "cross-env NODE_ENV=development nodemon --inspect=9230 server.js",
+    "events": "cross-env NODE_ENV=development nodemon --inspect=9230 eventManager.js -p 3000",
     "fresh": "npm run clean && npm run seed",
     "clean": "node clean.js",
     "seed": "node seed.js",
@@ -87,6 +88,11 @@
     "trim-request": "^1.0.6",
     "uuid": "^8.3.2",
     "validator": "^13.7.0"
+  },
+  "overrides": {
+    "siwe": {
+      "ethers": "^5.6.9"
+    }
   },
   "devDependencies": {
     "chai": "^4.3.6",
