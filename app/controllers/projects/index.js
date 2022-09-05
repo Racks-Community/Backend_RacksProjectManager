@@ -1,4 +1,5 @@
 const { createProject } = require('./createProject')
+const { createProjectWebhook } = require('./createProjectWebhook')
 const { deleteProject } = require('./deleteProject')
 const { getAllProjects } = require('./getAllProjects')
 const { getProject } = require('./getProject')
@@ -9,6 +10,7 @@ const { addContributorToProject } = require('./addContributorToProject')
 
 module.exports = {
   createProject,
+  createProjectWebhook,
   deleteProject,
   getAllProjects,
   getProject,
