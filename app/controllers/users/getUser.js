@@ -14,7 +14,9 @@ const getUser = async (req, res) => {
     const isHolder = await validateHolderInternal(req.address)
     if (isHolder < 1)
       return res.status(404).json({ message: 'you need at least 1 token' })
-    res.status(200).json(await getItemSearch({ address: req.address }, User))
+    const resUser = await getItemSearch({ address: req.address }, User)
+    if (resUser.length < 1) res.status(404).json({ message: 'Item not found' })
+    else res.status(200).json(resUser[0])
   } catch (error) {
     handleError(res, error)
   }

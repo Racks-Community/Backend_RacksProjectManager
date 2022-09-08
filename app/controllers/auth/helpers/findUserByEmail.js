@@ -10,7 +10,7 @@ const findUserByEmail = (email = '') => {
       {
         email
       },
-      'password loginAttempts blockExpires name email role verified verification address',
+      'password loginAttempts blockExpires name email role verified verification address contributor',
       async (err, item) => {
         try {
           if (err) reject(err)

@@ -58,6 +58,37 @@ const startEventManager = async () => {
         })
       }
     )
+
+    racksPM.on('newContributorRegistered', async (newContributorAddress) => {
+      let token = ''
+      const res = await fetch(process.env.API_URL + 'login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+      })
+
+      if (res?.ok) {
+        const data = await res.json()
+        token = data.token
+      } else {
+        console.log('Login error')
+        process.exit(1)
+      }
+
+      await fetch(
+        process.env.API_URL +
+          'users/contributor/webhook/' +
+          newContributorAddress,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: token
+          }
+        }
+      )
+    })
   } catch (error) {
     console.log(error)
     process.exit(1)

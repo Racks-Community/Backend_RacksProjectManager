@@ -1,12 +1,10 @@
-const User = require('../../models/user')
+const PendingContributor = require('../../models/pendingContributor')
 const { matchedData } = require('express-validator')
 const { isIDGood, handleError } = require('../../middleware/utils')
-const { updateItemSearch } = require('../../middleware/db')
+const { createItem } = require('../../middleware/db')
 const { validateHolderInternal } = require('../../middleware/auth')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 const { getInviteLink } = require('../../middleware/auth/discordManager')
-const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
-const ethers = require('ethers')
 
 /**
  * Update item function called by route
@@ -30,43 +28,13 @@ const updateUserToContributor = async (req, res) => {
     if (user.address !== req.address)
       return res.status(409).json({ message: 'Integrity violation' })
 
-    const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY
+    await createItem(req, PendingContributor)
 
-    const CONTRACT_ADDRESS =
-      process.env.CHAIN_ID in contractAddresses
-        ? contractAddresses[process.env.CHAIN_ID]
-        : null
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RINKEBY_PROVIDER
-    )
-
-    const racksPM = new ethers.Contract(
-      CONTRACT_ADDRESS.RacksProjectManager[0],
-      RacksPmAbi,
-      provider
-    )
-    let wallet = new ethers.Wallet(USER_PRIVATE_KEY, provider)
-    let racksPMSigner = racksPM.connect(wallet)
-
-    try {
-      let tx = await racksPMSigner.registerContributor()
-      await tx.wait()
-    } catch (error) {
-      handleError(res, error)
+    if (process.env.DISCORD_BOT_TOKEN != 'void') {
+      await getInviteLink()
     }
 
-    racksPM.on('newContributorRegistered', async (newContributorAddress) => {
-      const isContributor = await racksPM.isWalletContributor(req.address)
-      if (newContributorAddress === req.address && isContributor) {
-        try {
-          req.contributor = true
-          await updateItemSearch({ address: req.address }, User, req)
-          res.status(200).json(await getInviteLink())
-        } catch (error) {
-          handleError(res, error)
-        }
-      }
-    })
+    return res.status(200).json(true)
   } catch (error) {
     handleError(res, error)
   }

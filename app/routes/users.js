@@ -15,8 +15,10 @@ const {
   getUser,
   updateUser,
   updateUserToContributor,
+  updateUserToContributorWebhook,
   banContributor,
-  deleteUser
+  deleteUser,
+  deletePendingContributor
 } = require('../controllers/users')
 
 const {
@@ -24,6 +26,7 @@ const {
   validateGetUser,
   validateUpdateUser,
   validateUpdateUserToContributor,
+  validateUpdateUserToContributorWebhook,
   validateDeleteUser,
   validateBanUser
 } = require('../controllers/users/validators')
@@ -73,7 +76,7 @@ router.get(
 router.patch(
   '/:address',
   requireAuth,
-  roleAuthorization(['user']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
   validateUpdateUser,
   updateUser
@@ -82,13 +85,25 @@ router.patch(
 /*
  * Upgrade to Contributor
  */
-router.patch(
+router.post(
   '/contributor/:address',
   requireAuth,
-  roleAuthorization(['user']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
   validateUpdateUserToContributor,
   updateUserToContributor
+)
+
+/*
+ * Upgrade to Contributor webhook endpoint
+ */
+router.patch(
+  '/contributor/webhook/:address',
+  requireAuth,
+  roleAuthorization(['user', 'admin']),
+  trimRequest.all,
+  validateUpdateUserToContributorWebhook,
+  updateUserToContributorWebhook
 )
 
 /*
@@ -113,6 +128,18 @@ router.delete(
   trimRequest.all,
   validateDeleteUser,
   deleteUser
+)
+
+/*
+ * Delete Pending Contributor
+ */
+router.delete(
+  '/contributor/:address',
+  requireAuth,
+  roleAuthorization(['user', 'admin']),
+  trimRequest.all,
+  validateDeleteUser,
+  deletePendingContributor
 )
 
 module.exports = router

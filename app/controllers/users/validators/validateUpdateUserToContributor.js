@@ -12,7 +12,6 @@ const validateUpdateUserToContributor = [
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
-  check('name').optional(),
   check('email')
     .exists()
     .withMessage('MISSING')
@@ -25,18 +24,18 @@ const validateUpdateUserToContributor = [
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
-  check('country').optional(),
-  check('avatar').optional(),
-  check('urlTwitter')
-    .optional()
-    .custom((v) => (v === '' ? true : validator.isURL(v)))
-    .withMessage('NOT_A_VALID_URL'),
   check('githubUsername')
     .exists()
     .withMessage('MISSING')
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
+  check('name').optional(),
+  check('country').optional(),
+  check('urlTwitter')
+    .optional()
+    .custom((v) => (v === '' ? true : validator.isURL(v)))
+    .withMessage('NOT_A_VALID_URL'),
   (req, res, next) => {
     validateResult(req, res, next)
   }

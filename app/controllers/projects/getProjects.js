@@ -29,7 +29,6 @@ const getProjects = async (req, res) => {
       )
       return res.status(200).send(projects)
     }
-    res.status(500).send()
   } catch (error) {
     handleError(res, error)
   }

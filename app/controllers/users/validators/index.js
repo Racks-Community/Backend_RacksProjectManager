@@ -5,6 +5,9 @@ const { validateUpdateUser } = require('./validateUpdateUser')
 const {
   validateUpdateUserToContributor
 } = require('./validateUpdateUserToContributor')
+const {
+  validateUpdateUserToContributorWebhook
+} = require('./validateUpdateUserToContributorWebhook')
 const { validateBanUser } = require('./validateBanUser')
 
 module.exports = {
@@ -13,5 +16,6 @@ module.exports = {
   validateGetUser,
   validateUpdateUser,
   validateUpdateUserToContributor,
+  validateUpdateUserToContributorWebhook,
   validateBanUser
 }

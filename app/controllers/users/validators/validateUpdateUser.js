@@ -17,11 +17,8 @@ const validateUpdateUser = [
   check('discord').optional(),
   check('country').optional(),
   check('avatar').optional(),
+  check('githubUsername').optional(),
   check('urlTwitter')
-    .optional()
-    .custom((v) => (v === '' ? true : validator.isURL(v)))
-    .withMessage('NOT_A_VALID_URL'),
-  check('githubUsername')
     .optional()
     .custom((v) => (v === '' ? true : validator.isURL(v)))
     .withMessage('NOT_A_VALID_URL'),
