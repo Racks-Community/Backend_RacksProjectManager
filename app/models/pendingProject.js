@@ -11,6 +11,9 @@ const EventSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    requirements: {
+      type: String
+    },
     reputationLevel: {
       type: Number,
       default: 1,

@@ -5,9 +5,7 @@ const {
   PermissionsBitField,
   Colors
 } = require('discord.js')
-const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
-})
+
 const guildId = process.env.DISCORD_GUILD_ID
 
 const createChannels = async (name) => {
@@ -16,6 +14,9 @@ const createChannels = async (name) => {
       if (!name) {
         return reject(null)
       }
+      const client = new Client({
+        intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+      })
       client.on('ready', async () => {
         try {
           const guild = await client.guilds.fetch(guildId)
@@ -89,6 +90,9 @@ const createChannels = async (name) => {
 
 const getInviteLink = async () => {
   return new Promise((resolve, reject) => {
+    const client = new Client({
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+    })
     client.on('ready', async () => {
       try {
         const guild = await client.guilds.fetch(guildId)
@@ -109,6 +113,9 @@ const grantRolesToMember = async (projectName, username) => {
     if (!username || !projectName) {
       return reject(null)
     }
+    const client = new Client({
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+    })
     client.on('ready', async () => {
       try {
         const guild = await client.guilds.fetch(guildId)

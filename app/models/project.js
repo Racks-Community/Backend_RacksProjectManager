@@ -13,6 +13,9 @@ const EventSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    requirements: {
+      type: String
+    },
     status: {
       type: String,
       default: 'CREATED'

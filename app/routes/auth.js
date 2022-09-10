@@ -28,6 +28,8 @@ const {
   validateLoginNft
 } = require('../controllers/auth/validators')
 
+const { discordInvite } = require('../controllers/auth/helpers/discordInvite')
+
 const { mintTest } = require('../middleware/auth/mintTest')
 
 const { createLocalAdmin } = require('../middleware/auth/createLocalAdmin')
@@ -83,5 +85,13 @@ router.post('/create-local-admin', trimRequest.all, createLocalAdmin)
 router.get('/mintTest', trimRequest.all, mintTest)
 
 router.get('/nonce', trimRequest.all, nonce)
+
+router.get(
+  '/discord-invite',
+  requireAuth,
+  roleAuthorization(['user']),
+  trimRequest.all,
+  discordInvite
+)
 
 module.exports = router

@@ -32,6 +32,9 @@ const createProjectWebhook = async (req, res) => {
         maxContributorsNumber: pendingProject.maxContributorsNumber,
         address: req.newProjectAddress
       }
+      if (pendingProject.requirements) {
+        newProject.requirements = pendingProject.requirements
+      }
       saveRes = await createItem(newProject, Project)
       if (saveRes) {
         await deleteItemSearch({ name: req.newProjectName }, PendingProject)
@@ -49,6 +52,7 @@ const createProjectWebhook = async (req, res) => {
 
     return res.status(200).json(true)
   } catch (error) {
+    await deleteItemSearch({ name: req.newProjectName }, PendingProject)
     handleError(res, error)
   }
 }

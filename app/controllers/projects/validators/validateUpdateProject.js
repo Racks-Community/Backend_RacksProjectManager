@@ -13,6 +13,7 @@ const validateUpdateProject = [
     .withMessage('IS_EMPTY'),
   check('name').optional(),
   check('description').optional(),
+  check('requirements').optional(),
   check('reputationLevel').optional(),
   check('colateralCost').optional(),
   check('maxContributorsNumber').optional(),

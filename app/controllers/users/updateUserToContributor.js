@@ -4,7 +4,6 @@ const { isIDGood, handleError } = require('../../middleware/utils')
 const { createItem } = require('../../middleware/db')
 const { validateHolderInternal } = require('../../middleware/auth')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
-const { getInviteLink } = require('../../middleware/auth/discordManager')
 
 /**
  * Update item function called by route
@@ -29,10 +28,6 @@ const updateUserToContributor = async (req, res) => {
       return res.status(409).json({ message: 'Integrity violation' })
 
     await createItem(req, PendingContributor)
-
-    if (process.env.DISCORD_BOT_TOKEN != 'void') {
-      await getInviteLink()
-    }
 
     return res.status(200).json(true)
   } catch (error) {

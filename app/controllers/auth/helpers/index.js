@@ -26,6 +26,7 @@ const { updatePassword } = require('./updatePassword')
 const { userIsBlocked } = require('./userIsBlocked')
 const { verificationExists } = require('./verificationExists')
 const { verifyUser } = require('./verifyUser')
+const { discordInvite } = require('./discordInvite')
 const {
   saveAddressAccessAndReturnNonce
 } = require('./saveAddressAccessAndReturnNonce')
@@ -55,5 +56,6 @@ module.exports = {
   userIsBlocked,
   verificationExists,
   verifyUser,
+  discordInvite,
   saveAddressAccessAndReturnNonce
 }

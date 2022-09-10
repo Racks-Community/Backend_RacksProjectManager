@@ -40,6 +40,7 @@ const validateCreateProject = [
     .isEmpty()
     .withMessage('IS_EMPTY')
     .trim(),
+  check('requirements').optional(),
   (req, res, next) => {
     validateResult(req, res, next)
   }
