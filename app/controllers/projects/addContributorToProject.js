@@ -29,7 +29,7 @@ const addContributorToProject = async (req, res) => {
       provider
     )
 
-    const isProjectContributor = await projectContract.isInProjectContributor(
+    const isProjectContributor = await projectContract.isContributorInProject(
       req.contributorAddress
     )
     if (isProjectContributor) {

@@ -136,8 +136,38 @@ const grantRolesToMember = async (projectName, username) => {
   })
 }
 
+const deleteProjectChannels = async (projectName) => {
+  return new Promise((resolve, reject) => {
+    if (!projectName) {
+      return reject(null)
+    }
+    const client = new Client({
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+    })
+    client.on('ready', async () => {
+      try {
+        const guild = await client.guilds.fetch(guildId)
+        const fetchedChannel = guild.channels.cache.find(
+          (r) => r.name === projectName
+        )
+        if (fetchedChannel) {
+          fetchedChannel.children.cache.map(
+            async (child) => await child.delete()
+          )
+          await fetchedChannel.delete()
+        }
+        resolve(true)
+      } catch (e) {
+        reject(e)
+      }
+    })
+    client.login(process.env.DISCORD_BOT_TOKEN)
+  })
+}
+
 module.exports = {
   createChannels,
   getInviteLink,
-  grantRolesToMember
+  grantRolesToMember,
+  deleteProjectChannels
 }

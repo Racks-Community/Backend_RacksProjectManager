@@ -17,7 +17,8 @@ const {
   updateProject,
   addContributorToProject,
   completeProject,
-  deleteProject
+  deleteProject,
+  getProjectParticipation
 } = require('../controllers/projects')
 
 const {
@@ -79,6 +80,18 @@ router.get(
   trimRequest.all,
   validateGetProject,
   getProject
+)
+
+/*
+ * Get Project Participation
+ */
+router.get(
+  '/participation/:address',
+  requireAuth,
+  roleAuthorization(['admin']),
+  trimRequest.all,
+  validateGetProject,
+  getProjectParticipation
 )
 
 /*

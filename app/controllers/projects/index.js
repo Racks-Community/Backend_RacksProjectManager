@@ -7,6 +7,7 @@ const { getProjects } = require('./getProjects')
 const { updateProject } = require('./updateProject')
 const { completeProject } = require('./completeProject')
 const { addContributorToProject } = require('./addContributorToProject')
+const { getProjectParticipation } = require('./getProjectParticipation')
 
 module.exports = {
   createProject,
@@ -17,5 +18,6 @@ module.exports = {
   getProjects,
   updateProject,
   completeProject,
-  addContributorToProject
+  addContributorToProject,
+  getProjectParticipation
 }

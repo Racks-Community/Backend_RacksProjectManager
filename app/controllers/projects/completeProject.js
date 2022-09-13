@@ -6,6 +6,7 @@ const { getItemSearch } = require('../../middleware/db')
 const {
   addOrganizationContributor
 } = require('../../middleware/auth/githubManager')
+const { projectExistsByAddress } = require('./helpers')
 const { ProjectAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
 
@@ -17,6 +18,10 @@ const ethers = require('ethers')
 const completeProject = async (req, res) => {
   try {
     req = matchedData(req)
+    const doesProjectExists = await projectExistsByAddress(req.address)
+    if (!doesProjectExists) {
+      return res.status(404).send(false)
+    }
 
     const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
 
