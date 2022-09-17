@@ -54,10 +54,14 @@ const completeProject = async (req, res) => {
         let contributor = (
           await getItemSearch({ address: contributorOnChain.wallet }, User)
         )[0]
-        contributor.reputationLevel = contributorOnChain.reputationLevel
-        contributor.reputationPoints = contributorOnChain.reputationPoints
+        contributor.reputationLevel = ethers.BigNumber.from(
+          contributorOnChain.reputationLevel
+        ).toNumber()
+        contributor.reputationPoints = ethers.BigNumber.from(
+          contributorOnChain.reputationPoints
+        ).toNumber()
         await contributor.save()
-        const resData = await projectModel.save()
+        await projectModel.save()
         if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
           await addOrganizationContributor(
             contributor.githubUsername,
@@ -65,7 +69,9 @@ const completeProject = async (req, res) => {
           )
         }
       }
-      res.status(200).json(resData)
+      res.status(200).json(true)
+    } else {
+      res.status(500).json('No Completed')
     }
   } catch (error) {
     handleError(res, error)

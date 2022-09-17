@@ -12,6 +12,12 @@ const validateUpdateUserToContributor = [
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
+  check('avatar')
+    .exists()
+    .withMessage('MISSING')
+    .not()
+    .isEmpty()
+    .withMessage('IS_EMPTY'),
   check('email')
     .exists()
     .withMessage('MISSING')

@@ -36,7 +36,8 @@ const updateUserToContributorWebhook = async (req, res) => {
       const newContributor = {
         email: pendingContributor.email,
         discord: pendingContributor.discord,
-        githubUsername: pendingContributor.githubUsername
+        githubUsername: pendingContributor.githubUsername,
+        avatar: pendingContributor.avatar
       }
       if (pendingContributor.urlTwitter) {
         newContributor.urlTwitter = pendingContributor.urlTwitter

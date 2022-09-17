@@ -50,14 +50,14 @@ const addContributorToProject = async (req, res) => {
         projectModel.contributors.push(contributor)
         projectModel.status = 'DOING'
         const resData = await projectModel.save()
+        if (process.env.DISCORD_BOT_TOKEN != 'void') {
+          await grantRolesToMember(projectModel.name, contributor.discord)
+        }
         if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
           await addRepositoryContributor(
             projectModel.name,
             contributor.githubUsername
           )
-        }
-        if (process.env.DISCORD_BOT_TOKEN != 'void') {
-          await grantRolesToMember(projectModel.name, contributor.discord)
         }
         res.status(200).json(resData)
       } catch (error) {

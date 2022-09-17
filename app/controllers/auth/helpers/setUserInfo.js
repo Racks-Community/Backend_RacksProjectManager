@@ -6,12 +6,18 @@ const setUserInfo = (req = {}) => {
   return new Promise((resolve) => {
     let user = {
       _id: req._id,
-      name: req.name,
+      githubUsername: req.githubUsername,
+      discord: req.discord,
       role: req.role,
       email: req.email ? req.email : req.address + '@racks.com',
       address: req.address,
+      avatar: req.avatar,
       contributor: req.contributor,
-      verified: req.verified
+      verified: req.verified,
+      banned: req.banned,
+      reputationLevel: req.reputationLevel,
+      reputationPoints: req.reputationPoints,
+      totalProjects: req.totalProjects
     }
     // Adds verification for testing purposes
     if (process.env.NODE_ENV !== 'production') {
