@@ -7,6 +7,9 @@ const { validateGetProject } = require('./validateGetProject')
 const { validateUpdateProject } = require('./validateUpdateProject')
 const { validateCompleteProject } = require('./validateCompleteProject')
 const {
+  validateRemoveContributorFromProject
+} = require('./validateRemoveContributorFromProject')
+const {
   validateAddContributorToProject
 } = require('./validateAddContributorToProject')
 
@@ -17,5 +20,6 @@ module.exports = {
   validateGetProject,
   validateUpdateProject,
   validateCompleteProject,
-  validateAddContributorToProject
+  validateAddContributorToProject,
+  validateRemoveContributorFromProject
 }

@@ -16,6 +16,7 @@ const {
   getProject,
   updateProject,
   addContributorToProject,
+  removeContributorFromProject,
   completeProject,
   deleteProject,
   getProjectParticipation
@@ -28,7 +29,8 @@ const {
   validateUpdateProject,
   validateAddContributorToProject,
   validateCompleteProject,
-  validateDeleteProject
+  validateDeleteProject,
+  validateRemoveContributorFromProject
 } = require('../controllers/projects/validators')
 
 /*
@@ -119,7 +121,19 @@ router.post(
 )
 
 /*
- * Add Contributor to project
+ * Remove User from Project
+ */
+router.post(
+  '/remove-contributor/:address',
+  requireAuth,
+  roleAuthorization(['admin']),
+  trimRequest.all,
+  validateRemoveContributorFromProject,
+  removeContributorFromProject
+)
+
+/*
+ * Complete Project
  */
 router.post(
   '/completed/:address',

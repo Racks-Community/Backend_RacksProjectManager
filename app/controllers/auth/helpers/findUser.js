@@ -14,9 +14,8 @@ const findUser = (address = '') => {
       'password loginAttempts blockExpires name email role verified verification address',
       async (err, item) => {
         try {
-          if(err)
-            reject(err)
-            // await itemNotFound(err, item, 'USER_DOES_NOT_EXIST')
+          if (err) reject(err)
+          // await itemNotFound(err, item, 'USER_DOES_NOT_EXIST')
           resolve(item)
         } catch (error) {
           reject(error)

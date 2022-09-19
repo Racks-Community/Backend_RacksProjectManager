@@ -136,6 +136,88 @@ const grantRolesToMember = async (projectName, username) => {
   })
 }
 
+const removeRolesFromMember = async (projectName, username) => {
+  return new Promise((resolve, reject) => {
+    if (!username || !projectName) {
+      return reject(null)
+    }
+    const client = new Client({
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+    })
+    client.on('ready', async () => {
+      try {
+        const guild = await client.guilds.fetch(guildId)
+        let projectRole = guild.roles.cache.find((r) => r.name === projectName)
+
+        const memberList = await guild.members.fetch()
+        memberList.map(async (member) => {
+          if (member.displayName == username) {
+            await member.roles.remove(projectRole)
+          }
+        })
+        resolve()
+      } catch (e) {
+        reject(e)
+      }
+    })
+    client.login(process.env.DISCORD_BOT_TOKEN)
+  })
+}
+
+const banMemberFromGuild = async (username) => {
+  return new Promise((resolve, reject) => {
+    if (!username) {
+      return reject(null)
+    }
+    const client = new Client({
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+    })
+    client.on('ready', async () => {
+      try {
+        const guild = await client.guilds.fetch(guildId)
+
+        const memberList = await guild.members.fetch()
+        memberList.map(async (member) => {
+          if (member.displayName == username) {
+            await member.ban()
+          }
+        })
+        resolve()
+      } catch (e) {
+        reject(e)
+      }
+    })
+    client.login(process.env.DISCORD_BOT_TOKEN)
+  })
+}
+
+const unbanMemberFromGuild = async (username) => {
+  return new Promise((resolve, reject) => {
+    if (!username) {
+      return reject(null)
+    }
+    const client = new Client({
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+    })
+    client.on('ready', async () => {
+      try {
+        const guild = await client.guilds.fetch(guildId)
+
+        const memberList = await guild.members.fetch()
+        memberList.map(async (member) => {
+          if (member.displayName == username) {
+            await member.unban()
+          }
+        })
+        resolve()
+      } catch (e) {
+        reject(e)
+      }
+    })
+    client.login(process.env.DISCORD_BOT_TOKEN)
+  })
+}
+
 const deleteProjectChannels = async (projectName) => {
   return new Promise((resolve, reject) => {
     if (!projectName) {
@@ -169,5 +251,8 @@ module.exports = {
   createChannels,
   getInviteLink,
   grantRolesToMember,
-  deleteProjectChannels
+  deleteProjectChannels,
+  removeRolesFromMember,
+  banMemberFromGuild,
+  unbanMemberFromGuild
 }

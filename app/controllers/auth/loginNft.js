@@ -2,17 +2,16 @@ const { matchedData } = require('express-validator')
 const { handleError } = require('../../middleware/utils')
 const { SiweMessage } = require('siwe')
 const { getItemSearch } = require('../../middleware/db')
+const User = require('../../models/user')
 const userAccessAddress = require('../../models/userAccessAddress')
 const { validateHolderInternal } = require('../../middleware/auth')
 const {
-  findUser,
-  saveLoginAttemptsToDB, 
+  saveLoginAttemptsToDB,
   saveUserAccessAndReturnToken,
   registerUser,
   setUserInfo,
   returnRegisterToken
 } = require('./helpers')
-
 
 // const { ethers } = require("ethers");
 
@@ -24,21 +23,25 @@ const {
 const loginNft = async (req, res) => {
   try {
     const resp = matchedData(req)
-    const {message, signature} = resp;
-    const siweMessage = new SiweMessage(message);
+    const { message, signature } = resp
+    const siweMessage = new SiweMessage(message)
     const fields = await siweMessage.validate(signature)
-    const {nonce, address} = fields;
-    let NonceCompare = await getItemSearch({nonce: nonce}, userAccessAddress);
-  
-    if (nonce != NonceCompare[0].nonce) return res.status(404).json({ message: 'error nonce compare' })
-    const isHolder = await validateHolderInternal(address);
-    if (isHolder < 1) return res.status(404).json({ message: 'you need at least 1 token' })
-    const user = await findUser(address);
+    const { nonce, address } = fields
+    let NonceCompare = await getItemSearch({ nonce: nonce }, userAccessAddress)
+
+    if (nonce != NonceCompare[0].nonce)
+      return res.status(404).json({ message: 'error nonce compare' })
+    const isHolder = await validateHolderInternal(address)
+    if (isHolder < 1)
+      return res.status(404).json({ message: 'you need at least 1 token' })
+    const user = (await getItemSearch({ address: address }, User))[0]
     if (!user) {
       let userRegister = {
         name: req.name ? req.name : address,
-        email:  req.email ? req.email : address + '@racks.com' ,
-        password: req.password ? req.password : address + nonce+ Math.floor(Date.now() / 1000),
+        email: req.email ? req.email : address + '@racks.com',
+        password: req.password
+          ? req.password
+          : address + nonce + Math.floor(Date.now() / 1000),
         address
       }
       const item = await registerUser(userRegister)
@@ -49,7 +52,6 @@ const loginNft = async (req, res) => {
       await saveLoginAttemptsToDB(user)
       res.status(200).json(await saveUserAccessAndReturnToken(req, user))
     }
-   
   } catch (error) {
     handleError(res, error)
   }

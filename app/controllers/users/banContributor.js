@@ -1,8 +1,16 @@
 const User = require('../../models/user')
 const { matchedData } = require('express-validator')
 const { handleError } = require('../../middleware/utils')
-const { updateItemSearch } = require('../../middleware/db')
+const { getItemSearch, updateItemSearch } = require('../../middleware/db')
 const { validateHolderInternal } = require('../../middleware/auth')
+const {
+  banMemberFromGuild,
+  unbanMemberFromGuild
+} = require('../../middleware/auth/discordManager')
+const {
+  blockOrganizationContributor,
+  unblockOrganizationContributor
+} = require('../../middleware/auth/githubManager')
 const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
 
@@ -47,6 +55,20 @@ const banContributor = async (req, res) => {
 
         const isBanned = await racksPM.isContributorBanned(req.address)
         if (isBanned == bannedState) {
+          let contributor = (
+            await getItemSearch({ address: req.address }, User)
+          )[0]
+
+          if (process.env.DISCORD_BOT_TOKEN != 'void') {
+            if (bannedState) await banMemberFromGuild(contributor.discord)
+            else await unbanMemberFromGuild(contributor.discord)
+          }
+          if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
+            if (bannedState)
+              await blockOrganizationContributor(contributor.githubUsername)
+            else
+              await unblockOrganizationContributor(contributor.githubUsername)
+          }
           res
             .status(200)
             .json(await updateItemSearch({ address: req.address }, User, req))

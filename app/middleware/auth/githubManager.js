@@ -56,6 +56,30 @@ const addRepositoryContributor = (name, username) => {
   })
 }
 
+const removeRepositoryContributor = (name, username) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!name || !username) {
+        return reject(null)
+      }
+      name = formatName(name)
+      await octokit.request(
+        'DELETE /repos/{owner}/{repo}/collaborators/{username}',
+        {
+          owner: process.env.GITHUB_ORGANIZATION,
+          repo: name,
+          username: username
+        }
+      )
+
+      resolve()
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
 const addOrganizationContributor = (username, email) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -78,6 +102,44 @@ const addOrganizationContributor = (username, email) => {
           role: 'direct_member'
         })
       }
+      resolve()
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+const blockOrganizationContributor = (username) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!username) {
+        return reject(null)
+      }
+      await octokit.request('PUT /orgs/{org}/blocks/{username}', {
+        org: process.env.GITHUB_ORGANIZATION,
+        username: username
+      })
+
+      resolve()
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+const unblockOrganizationContributor = (username) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!username) {
+        return reject(null)
+      }
+      await octokit.request('DELETE /orgs/{org}/blocks/{username}', {
+        org: process.env.GITHUB_ORGANIZATION,
+        username: username
+      })
+
       resolve()
     } catch (error) {
       console.log(error)
@@ -173,5 +235,8 @@ module.exports = {
   addRepositoryContributor,
   addOrganizationContributor,
   deleteRepository,
-  getContributorsParticipation
+  removeRepositoryContributor,
+  getContributorsParticipation,
+  blockOrganizationContributor,
+  unblockOrganizationContributor
 }

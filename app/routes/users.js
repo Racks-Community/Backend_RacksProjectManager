@@ -41,7 +41,7 @@ const {
 router.get(
   '/',
   requireAuth,
-  roleAuthorization(['user', 'admin']),
+  roleAuthorization(['admin']),
   trimRequest.all,
   getUsers
 )
