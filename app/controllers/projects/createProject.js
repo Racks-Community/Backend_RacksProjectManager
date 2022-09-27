@@ -36,15 +36,19 @@ const createProject = async (req, res) => {
     )
     let racksPMSigner = racksPM.connect(wallet)
 
-    await createItem(req, PendingProject)
+    req.imageURL = process.env.API_URL + 'images/' + req.imageURL.name
 
-    let tx = await racksPMSigner.createProject(
-      req.name,
-      req.colateralCost,
-      req.reputationLevel,
-      req.maxContributorsNumber
-    )
-    await tx.wait()
+    console.log(req)
+
+    // await createItem(req, PendingProject)
+
+    // let tx = await racksPMSigner.createProject(
+    //   req.name,
+    //   req.colateralCost,
+    //   req.reputationLevel,
+    //   req.maxContributorsNumber
+    // )
+    // await tx.wait()
     return res.status(200).json(true)
   } catch (error) {
     handleError(res, error)
