@@ -26,7 +26,7 @@ const completeProject = async (req, res) => {
     const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
 
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RINKEBY_PROVIDER
+      process.env.RPC_PROVIDER
     )
 
     let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)

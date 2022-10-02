@@ -12,9 +12,7 @@ const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
  */
 const createProject = async (req, res) => {
   try {
-    req = matchedData(req)
-
-    const doesProjectExists = await projectExistsByName(req.name)
+    const doesProjectExists = await projectExistsByName(req.body.name)
     if (doesProjectExists) {
       return res.status(409).send(false)
     }
@@ -25,7 +23,7 @@ const createProject = async (req, res) => {
         ? contractAddresses[process.env.CHAIN_ID]
         : null
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RINKEBY_PROVIDER
+      process.env.RPC_PROVIDER
     )
     let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
 
@@ -36,19 +34,18 @@ const createProject = async (req, res) => {
     )
     let racksPMSigner = racksPM.connect(wallet)
 
-    req.imageURL = process.env.API_URL + 'images/' + req.imageURL.name
+    if (req.file)
+      req.body.imageURL = process.env.API_URL + 'uploads/' + req.file.filename
 
-    console.log(req)
+    await createItem(req.body, PendingProject)
 
-    // await createItem(req, PendingProject)
-
-    // let tx = await racksPMSigner.createProject(
-    //   req.name,
-    //   req.colateralCost,
-    //   req.reputationLevel,
-    //   req.maxContributorsNumber
-    // )
-    // await tx.wait()
+    let tx = await racksPMSigner.createProject(
+      req.body.name,
+      req.body.colateralCost,
+      req.body.reputationLevel,
+      req.body.maxContributorsNumber
+    )
+    await tx.wait()
     return res.status(200).json(true)
   } catch (error) {
     handleError(res, error)

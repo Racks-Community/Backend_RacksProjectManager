@@ -1,6 +1,7 @@
 const { validateCreateUser } = require('./validateCreateUser')
 const { validateDeleteUser } = require('./validateDeleteUser')
 const { validateGetUser } = require('./validateGetUser')
+const { validateGetUserFromId } = require('./validateGetUserFromId')
 const { validateUpdateUser } = require('./validateUpdateUser')
 const {
   validateUpdateUserToContributor
@@ -14,6 +15,7 @@ module.exports = {
   validateCreateUser,
   validateDeleteUser,
   validateGetUser,
+  validateGetUserFromId,
   validateUpdateUser,
   validateUpdateUserToContributor,
   validateUpdateUserToContributorWebhook,

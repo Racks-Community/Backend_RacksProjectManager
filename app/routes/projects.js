@@ -33,6 +33,8 @@ const {
   validateRemoveContributorFromProject
 } = require('../controllers/projects/validators')
 
+const { upload } = require('../controllers/upload/upload')
+
 /*
  * Projects routes
  */
@@ -53,10 +55,10 @@ router.get(
  */
 router.post(
   '/',
+  upload.single('imageURL'),
   requireAuth,
   roleAuthorization(['admin']),
   trimRequest.all,
-  validateCreateProject,
   createProject
 )
 

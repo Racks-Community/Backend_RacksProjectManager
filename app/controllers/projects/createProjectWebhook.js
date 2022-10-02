@@ -30,14 +30,12 @@ const createProjectWebhook = async (req, res) => {
         reputationLevel: pendingProject.reputationLevel,
         colateralCost: pendingProject.colateralCost,
         maxContributorsNumber: pendingProject.maxContributorsNumber,
+        owner: pendingProject.owner,
+        imageURL: pendingProject.imageURL,
         address: req.newProjectAddress
       }
       if (pendingProject.requirements) {
         newProject.requirements = pendingProject.requirements
-      }
-      saveRes = await createItem(newProject, Project)
-      if (saveRes) {
-        await deleteItemSearch({ name: req.newProjectName }, PendingProject)
       }
       if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
         req.githubRepository = await createRepository(
@@ -48,9 +46,11 @@ const createProjectWebhook = async (req, res) => {
       if (process.env.DISCORD_BOT_TOKEN != 'void') {
         await createChannels(pendingProject.name)
       }
+      await deleteItemSearch({ name: req.newProjectName }, PendingProject)
+      saveRes = await createItem(newProject, Project)
     }
 
-    return res.status(200).json(true)
+    return res.status(200).json(saveRes)
   } catch (error) {
     await deleteItemSearch({ name: req.newProjectName }, PendingProject)
     handleError(res, error)

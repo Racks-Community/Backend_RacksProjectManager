@@ -20,7 +20,7 @@ const addContributorToProject = async (req, res) => {
     req = matchedData(req)
 
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RINKEBY_PROVIDER
+      process.env.RPC_PROVIDER
     )
 
     const projectContract = new ethers.Contract(
