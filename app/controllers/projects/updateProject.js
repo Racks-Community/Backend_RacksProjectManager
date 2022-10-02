@@ -12,8 +12,6 @@ const ethers = require('ethers')
  */
 const updateProject = async (req, res) => {
   try {
-    req = matchedData(req)
-
     const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
 
     const provider = new ethers.providers.JsonRpcProvider(
@@ -21,28 +19,42 @@ const updateProject = async (req, res) => {
     )
     let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
 
-    const project = new ethers.Contract(req.address, ProjectAbi, provider)
+    const project = new ethers.Contract(
+      req.params.address,
+      ProjectAbi,
+      provider
+    )
     let projectSigner = project.connect(wallet)
     try {
-      if (req.reputationLevel) {
-        let tx = await projectSigner.setReputationLevel(req.reputationLevel)
-        await tx.wait()
-      }
-
-      if (req.colateralCost) {
-        let tx = await projectSigner.setColateralCost(req.colateralCost)
-        await tx.wait()
-      }
-
-      if (req.maxContributorsNumber) {
-        let tx = await projectSigner.setMaxContributorsNumber(
-          req.maxContributorsNumber
+      if (req.body.reputationLevel) {
+        let tx = await projectSigner.setReputationLevel(
+          req.body.reputationLevel
         )
         await tx.wait()
       }
+
+      if (req.body.colateralCost) {
+        let tx = await projectSigner.setColateralCost(req.body.colateralCost)
+        await tx.wait()
+      }
+
+      if (req.body.maxContributorsNumber) {
+        let tx = await projectSigner.setMaxContributorsNumber(
+          req.body.maxContributorsNumber
+        )
+        await tx.wait()
+      }
+      if (req.file)
+        req.body.imageURL = process.env.API_URL + 'uploads/' + req.file.filename
       res
         .status(200)
-        .json(await updateItemSearch({ address: req.address }, Project, req))
+        .json(
+          await updateItemSearch(
+            { address: req.params.address },
+            Project,
+            req.body
+          )
+        )
     } catch (error) {
       handleError(res, error)
     }

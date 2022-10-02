@@ -103,6 +103,7 @@ router.get(
  */
 router.patch(
   '/:address',
+  upload.single('imageURL'),
   requireAuth,
   roleAuthorization(['admin']),
   trimRequest.all,
