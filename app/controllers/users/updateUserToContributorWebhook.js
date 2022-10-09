@@ -32,29 +32,34 @@ const updateUserToContributorWebhook = async (req, res) => {
           await updateItemSearch({ address: req.address }, User, newContributor)
         )
     } else {
-      pendingContributor = pendingContributor[0]
-      const newContributor = {
-        email: pendingContributor.email,
-        discord: pendingContributor.discord,
-        githubUsername: pendingContributor.githubUsername,
-        avatar: pendingContributor.avatar
-      }
-      if (pendingContributor.urlTwitter) {
-        newContributor.urlTwitter = pendingContributor.urlTwitter
-      }
-      if (pendingContributor.country) {
-        newContributor.country = pendingContributor.country
-      }
+      try {
+        pendingContributor = pendingContributor[0]
+        const newContributor = {
+          email: pendingContributor.email,
+          discord: pendingContributor.discord,
+          githubUsername: pendingContributor.githubUsername.toLowerCase(),
+          avatar: pendingContributor.avatar
+        }
+        if (pendingContributor.urlTwitter) {
+          newContributor.urlTwitter = pendingContributor.urlTwitter
+        }
+        if (pendingContributor.country) {
+          newContributor.country = pendingContributor.country
+        }
 
-      newContributor.contributor = true
-      newContributor.verified = true
-      await deleteItemSearch({ address: req.address }, PendingContributor)
-      const resUpdate = await updateItemSearch(
-        { address: req.address },
-        User,
-        newContributor
-      )
-      res.status(200).json(resUpdate)
+        newContributor.contributor = true
+        newContributor.verified = true
+        await deleteItemSearch({ address: req.address }, PendingContributor)
+        const resUpdate = await updateItemSearch(
+          { address: req.address },
+          User,
+          newContributor
+        )
+        res.status(200).json(resUpdate)
+      } catch (error) {
+        await deleteItemSearch({ address: req.address }, PendingContributor)
+        handleError(res, error)
+      }
     }
   } catch (error) {
     await deleteItemSearch({ address: req.address }, PendingContributor)

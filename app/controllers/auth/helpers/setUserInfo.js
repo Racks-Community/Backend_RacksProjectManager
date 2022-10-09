@@ -17,7 +17,8 @@ const setUserInfo = (req = {}) => {
       banned: req.banned,
       reputationLevel: req.reputationLevel,
       reputationPoints: req.reputationPoints,
-      totalProjects: req.totalProjects
+      totalProjects: req.totalProjects,
+      createdAt: req.createdAt
     }
     // Adds verification for testing purposes
     if (process.env.NODE_ENV !== 'production') {

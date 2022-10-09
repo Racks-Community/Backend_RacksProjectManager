@@ -89,4 +89,4 @@ public/reports/*
 
 web3Constants/networkMapping.json
 web3Constants/polygon
-web3Constants/rinkeby
+web3Constants/goerli

@@ -20,6 +20,10 @@ const EventSchema = new mongoose.Schema(
       type: String,
       default: 'CREATED'
     },
+    approveStatus: {
+      type: String,
+      default: 'PENDING'
+    },
     completed: {
       type: Boolean,
       default: false
@@ -41,7 +45,14 @@ const EventSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: true
+      default: 1
+    },
+    imageURL: {
+      type: String,
+      default: process.env.API_URL + 'images/racks.png'
+    },
+    completedAt: {
+      type: Date
     },
     githubRepository: {
       type: String,
@@ -53,7 +64,8 @@ const EventSchema = new mongoose.Schema(
       },
       lowercase: true
     },
-    contributors: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    contributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    owner: { type: Schema.Types.ObjectId, ref: 'User', required: true }
   },
   {
     versionKey: false,

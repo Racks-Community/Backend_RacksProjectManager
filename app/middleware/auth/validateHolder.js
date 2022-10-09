@@ -14,7 +14,7 @@ const validateHolder = async (req, res, next) => {
         ? contractAddresses[process.env.CHAIN_ID]
         : null
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RINKEBY_PROVIDER
+      process.env.RPC_PROVIDER
     )
 
     const mrCrypto = new ethers.Contract(
@@ -45,7 +45,7 @@ const validateHolderInternal = (address) => {
           ? contractAddresses[process.env.CHAIN_ID]
           : null
       const provider = new ethers.providers.JsonRpcProvider(
-        process.env.RINKEBY_PROVIDER
+        process.env.RPC_PROVIDER
       )
 
       const mrCrypto = new ethers.Contract(

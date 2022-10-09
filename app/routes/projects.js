@@ -6,7 +6,6 @@ const requireAuth = passport.authenticate('jwt', {
   session: false
 })
 const trimRequest = require('trim-request')
-
 const { roleAuthorization } = require('../controllers/auth')
 
 const {
@@ -19,11 +18,12 @@ const {
   removeContributorFromProject,
   completeProject,
   deleteProject,
+  approveProject,
   getProjectParticipation
 } = require('../controllers/projects')
 
 const {
-  validateCreateProject,
+  validateApproveProject,
   validateCreateProjectWebhook,
   validateGetProject,
   validateUpdateProject,
@@ -32,6 +32,8 @@ const {
   validateDeleteProject,
   validateRemoveContributorFromProject
 } = require('../controllers/projects/validators')
+
+const { upload } = require('../controllers/upload/upload')
 
 /*
  * Projects routes
@@ -53,10 +55,10 @@ router.get(
  */
 router.post(
   '/',
+  upload.single('imageURL'),
   requireAuth,
-  roleAuthorization(['admin']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
-  validateCreateProject,
   createProject
 )
 
@@ -101,8 +103,9 @@ router.get(
  */
 router.patch(
   '/:address',
+  upload.single('imageURL'),
   requireAuth,
-  roleAuthorization(['admin']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
   validateUpdateProject,
   updateProject
@@ -145,12 +148,24 @@ router.post(
 )
 
 /*
+ * Approve Project route
+ */
+router.post(
+  '/approve/:address',
+  requireAuth,
+  roleAuthorization(['admin']),
+  trimRequest.all,
+  validateApproveProject,
+  approveProject
+)
+
+/*
  * Delete item route
  */
 router.delete(
   '/:address',
   requireAuth,
-  roleAuthorization(['admin']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
   validateDeleteProject,
   deleteProject

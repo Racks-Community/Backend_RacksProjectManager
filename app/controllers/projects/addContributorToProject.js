@@ -20,7 +20,7 @@ const addContributorToProject = async (req, res) => {
     req = matchedData(req)
 
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RINKEBY_PROVIDER
+      process.env.RPC_PROVIDER
     )
 
     const projectContract = new ethers.Contract(
@@ -41,7 +41,7 @@ const addContributorToProject = async (req, res) => {
           await getItemSearch({ address: req.contributorAddress }, User)
         )[0]
 
-        if (!contributor.verified) {
+        if (!contributor.verified || projectModel.approveStatus != 'ACTIVE') {
           return res.status(500).send()
         }
 

@@ -14,7 +14,7 @@
     "test:unit": "cross-env NODE_ENV=test jest --coverage",
     "test:e2e": "cross-env NODE_ENV=test npm run fresh && npm run mocha",
     "dev": "cross-env NODE_ENV=development nodemon --inspect=9230 server.js",
-    "events": "cross-env NODE_ENV=development nodemon --inspect=9230 eventManager.js",
+    "events": "cross-env NODE_ENV=development nodemon --inspect=9231 eventManager.js",
     "fresh": "npm run clean && npm run seed",
     "clean": "node clean.js",
     "seed": "node seed.js",

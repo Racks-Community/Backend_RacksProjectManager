@@ -5,10 +5,6 @@ const mongoosePaginate = require('mongoose-paginate-v2')
 
 const UserSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true
-    },
     email: {
       type: String,
       validate: {
@@ -76,6 +72,10 @@ const UserSchema = new mongoose.Schema(
       default: 0
     },
     totalProjects: {
+      type: Number,
+      default: 0
+    },
+    ownedProjects: {
       type: Number,
       default: 0
     },

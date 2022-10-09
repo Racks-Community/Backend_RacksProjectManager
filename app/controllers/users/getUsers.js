@@ -10,7 +10,11 @@ const { getItems, checkQueryString } = require('../../middleware/db')
 const getUsers = async (req, res) => {
   try {
     const query = await checkQueryString(req.query)
-    res.status(200).json(await getItems(req, User, query))
+    const users = await getItems(req, User, query)
+    const contributors = users.docs.filter(
+      (user) => user.contributor && user.verified && user.role === 'user'
+    )
+    res.status(200).json(contributors)
   } catch (error) {
     handleError(res, error)
   }

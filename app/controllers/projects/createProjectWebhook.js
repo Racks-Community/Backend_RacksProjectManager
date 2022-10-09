@@ -5,8 +5,8 @@ const { handleError } = require('../../middleware/utils')
 const { getItemSearch, deleteItemSearch } = require('../../middleware/db')
 const { matchedData } = require('express-validator')
 const { projectExistsByName, projectExistsByAddress } = require('./helpers')
-const { createRepository } = require('../../middleware/auth/githubManager')
-const { createChannels } = require('../../middleware/auth/discordManager')
+const { approveProjectInternal } = require('./approveProjectInternal')
+const { findUserById } = require('../auth/helpers')
 /**
  * Create item function called by route
  * @param {Object} req - request object
@@ -30,27 +30,27 @@ const createProjectWebhook = async (req, res) => {
         reputationLevel: pendingProject.reputationLevel,
         colateralCost: pendingProject.colateralCost,
         maxContributorsNumber: pendingProject.maxContributorsNumber,
+        owner: pendingProject.owner,
+        imageURL: pendingProject.imageURL,
         address: req.newProjectAddress
       }
       if (pendingProject.requirements) {
         newProject.requirements = pendingProject.requirements
       }
+      await deleteItemSearch({ name: req.newProjectName }, PendingProject)
       saveRes = await createItem(newProject, Project)
-      if (saveRes) {
-        await deleteItemSearch({ name: req.newProjectName }, PendingProject)
+
+      const user = await findUserById(pendingProject.owner)
+      if (user) {
+        user.ownedProjects++
+        await user.save()
       }
-      if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
-        req.githubRepository = await createRepository(
-          pendingProject.name,
-          pendingProject.description
-        )
-      }
-      if (process.env.DISCORD_BOT_TOKEN != 'void') {
-        await createChannels(pendingProject.name)
+
+      if (pendingProject.approveStatus === 'ACTIVE') {
+        await approveProjectInternal(req.newProjectAddress, true)
       }
     }
-
-    return res.status(200).json(true)
+    return res.status(200).json(saveRes)
   } catch (error) {
     await deleteItemSearch({ name: req.newProjectName }, PendingProject)
     handleError(res, error)

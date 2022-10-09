@@ -13,6 +13,7 @@ const {
   getUsers,
   createUser,
   getUser,
+  getUserFromId,
   updateUser,
   updateUserToContributor,
   updateUserToContributorWebhook,
@@ -24,6 +25,7 @@ const {
 const {
   validateCreateUser,
   validateGetUser,
+  validateGetUserFromId,
   validateUpdateUser,
   validateUpdateUserToContributor,
   validateUpdateUserToContributorWebhook,
@@ -68,6 +70,18 @@ router.get(
   trimRequest.all,
   validateGetUser,
   getUser
+)
+
+/*
+ * Get item from id route
+ */
+router.get(
+  '/id/:id',
+  requireAuth,
+  roleAuthorization(['user', 'admin']),
+  trimRequest.all,
+  validateGetUserFromId,
+  getUserFromId
 )
 
 /*

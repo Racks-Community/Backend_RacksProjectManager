@@ -11,7 +11,7 @@ const startEventManager = async () => {
         ? contractAddresses[process.env.CHAIN_ID]
         : null
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RINKEBY_PROVIDER
+      process.env.RPC_PROVIDER
     )
     const racksPM = new ethers.Contract(
       CONTRACT_ADDRESS.RacksProjectManager[0],

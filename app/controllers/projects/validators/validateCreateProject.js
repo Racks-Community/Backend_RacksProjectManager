@@ -40,7 +40,15 @@ const validateCreateProject = [
     .isEmpty()
     .withMessage('IS_EMPTY')
     .trim(),
+  check('owner')
+    .exists()
+    .withMessage('MISSING')
+    .not()
+    .isEmpty()
+    .withMessage('IS_EMPTY')
+    .trim(),
   check('requirements').optional(),
+  check('imageURL').optional(),
   (req, res, next) => {
     validateResult(req, res, next)
   }
