@@ -27,12 +27,22 @@ const getProjectParticipation = async (req, res) => {
     if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
       participations = await getContributorsParticipation(project.name)
     }
+    if (!participations)
+      return res.status(409).send('Project repository is empty.')
 
-    for (contribution of participations) {
+    for (let [i, contribution] of participations.entries()) {
       let contributor = (
-        await getItemSearch({ githubUsername: contribution.name }, User)
+        await getItemSearch(
+          { githubUsername: contribution.name.toLowerCase() },
+          User
+        )
       )[0]
-      contribution.address = contributor.address
+      if (contributor) {
+        contribution.address = contributor.address
+        contribution.participation = Math.trunc(contribution.participation)
+      } else {
+        participations.splice(i, 1)
+      }
     }
 
     return res.status(200).json(participations)

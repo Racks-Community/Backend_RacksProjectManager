@@ -6,7 +6,6 @@ const requireAuth = passport.authenticate('jwt', {
   session: false
 })
 const trimRequest = require('trim-request')
-
 const { roleAuthorization } = require('../controllers/auth')
 
 const {
@@ -19,11 +18,12 @@ const {
   removeContributorFromProject,
   completeProject,
   deleteProject,
+  approveProject,
   getProjectParticipation
 } = require('../controllers/projects')
 
 const {
-  validateCreateProject,
+  validateApproveProject,
   validateCreateProjectWebhook,
   validateGetProject,
   validateUpdateProject,
@@ -57,7 +57,7 @@ router.post(
   '/',
   upload.single('imageURL'),
   requireAuth,
-  roleAuthorization(['admin']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
   createProject
 )
@@ -105,7 +105,7 @@ router.patch(
   '/:address',
   upload.single('imageURL'),
   requireAuth,
-  roleAuthorization(['admin']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
   validateUpdateProject,
   updateProject
@@ -148,12 +148,24 @@ router.post(
 )
 
 /*
+ * Approve Project route
+ */
+router.post(
+  '/approve/:address',
+  requireAuth,
+  roleAuthorization(['admin']),
+  trimRequest.all,
+  validateApproveProject,
+  approveProject
+)
+
+/*
  * Delete item route
  */
 router.delete(
   '/:address',
   requireAuth,
-  roleAuthorization(['admin']),
+  roleAuthorization(['user', 'admin']),
   trimRequest.all,
   validateDeleteProject,
   deleteProject

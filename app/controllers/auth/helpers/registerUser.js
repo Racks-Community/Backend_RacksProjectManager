@@ -9,8 +9,7 @@ const { buildErrObject } = require('../../../middleware/utils')
 const registerUser = (req = {}) => {
   return new Promise((resolve, reject) => {
     const user = new User({
-      name: req.name,
-      email:  req.email ? req.email : req.address + '@racks.com' ,
+      email: req.email ? req.email : req.address + '@racks.com',
       password: req.password,
       address: req.address,
       verification: uuid.v4()

@@ -1,7 +1,7 @@
 const Project = require('../../models/project')
-const { updateItemSearch } = require('../../middleware/db')
-const { handleError } = require('../../middleware/utils')
-const { matchedData } = require('express-validator')
+const { updateItemSearch, getItemSearch } = require('../../middleware/db')
+const { isIDGood, handleError } = require('../../middleware/utils')
+const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 const { ProjectAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
 
@@ -12,6 +12,21 @@ const ethers = require('ethers')
  */
 const updateProject = async (req, res) => {
   try {
+    const tokenEncrypted = req.headers.authorization
+      .replace('Bearer ', '')
+      .trim()
+
+    let project = (
+      await getItemSearch({ address: req.params.address }, Project)
+    )[0]
+    let userId = await getUserIdFromToken(tokenEncrypted)
+    userId = await isIDGood(userId)
+    const user = await findUserById(userId)
+    if (user.id !== project.owner + '' && user.role != 'admin')
+      return res
+        .status(409)
+        .send('Integrity Conflict. User is not the Owner or Admin')
+
     const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
 
     const provider = new ethers.providers.JsonRpcProvider(
@@ -19,12 +34,12 @@ const updateProject = async (req, res) => {
     )
     let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
 
-    const project = new ethers.Contract(
+    const projectContract = new ethers.Contract(
       req.params.address,
       ProjectAbi,
       provider
     )
-    let projectSigner = project.connect(wallet)
+    let projectSigner = projectContract.connect(wallet)
     try {
       if (req.body.reputationLevel) {
         let tx = await projectSigner.setReputationLevel(

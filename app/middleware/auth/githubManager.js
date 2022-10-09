@@ -176,14 +176,14 @@ const getContributorsParticipation = (name) => {
       }
       const MID_DIFFICULTY = '[mid]'
       const HIGH_DIFFICULTY = '[high]'
-      name = 'RacksProjectManager'
-      org = 'Racks-Community'
+      // name = 'RacksProjectManager'
+      // org = 'Racks-Community'
       name = formatName(name)
       const commits = await octokit.request(
         'GET /repos/{owner}/{repo}/commits',
         {
-          // owner: process.env.GITHUB_ORGANIZATION,
-          owner: org,
+          owner: process.env.GITHUB_ORGANIZATION,
+          // owner: org,
           repo: name
         }
       )
@@ -219,8 +219,12 @@ const getContributorsParticipation = (name) => {
 
       resolve(participations)
     } catch (error) {
-      console.log(error)
-      reject(error)
+      if (
+        error.status == '409' &&
+        error.response.data.message == 'Git Repository is empty.'
+      )
+        resolve(null)
+      else reject(error)
     }
   })
 }

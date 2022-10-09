@@ -25,7 +25,9 @@ const getProjects = async (req, res) => {
       return res.status(200).send(projects)
     } else {
       projects = projects.filter(
-        (project) => project.reputationLevel <= user.reputationLevel
+        (project) =>
+          project.reputationLevel <= user.reputationLevel ||
+          user.id === project.owner + ''
       )
       return res.status(200).send(projects)
     }

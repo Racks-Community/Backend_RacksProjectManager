@@ -20,6 +20,10 @@ const EventSchema = new mongoose.Schema(
       type: String,
       default: 'CREATED'
     },
+    approveStatus: {
+      type: String,
+      default: 'PENDING'
+    },
     completed: {
       type: Boolean,
       default: false

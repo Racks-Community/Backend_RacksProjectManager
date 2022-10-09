@@ -9,6 +9,7 @@ const {
 const { projectExistsByAddress } = require('./helpers')
 const { ProjectAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
+const { getUserFromId } = require('../users/getUserFromId')
 
 /**
  * Update item function called by route
@@ -41,19 +42,21 @@ const completeProject = async (req, res) => {
     )
     await tx.wait()
 
-    const completed = await project.isCompleted()
+    const completed = await project.isFinished()
     if (completed) {
       let projectModel = (
         await getItemSearch({ address: req.address }, Project)
       )[0]
       projectModel.completed = true
       projectModel.status = 'FINISHED'
-      const numContributors = await project.getContributorsNumber()
-      for (let i = 0; i < numContributors; i++) {
-        const contributorOnChain = await project.getProjectContributor(i)
+      projectModel.completedAt = new Date()
+      for (let contrWallet of projectModel.contributors) {
         let contributor = (
-          await getItemSearch({ address: contributorOnChain.wallet }, User)
+          await getItemSearch({ _id: contrWallet + '' }, User)
         )[0]
+        const contributorOnChain = await projectSigner.getContributorByAddress(
+          contributor.address
+        )
         contributor.reputationLevel = ethers.BigNumber.from(
           contributorOnChain.reputationLevel
         ).toNumber()

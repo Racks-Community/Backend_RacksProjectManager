@@ -1,10 +1,10 @@
 const PendingProject = require('../../models/pendingProject')
 const { createItem } = require('../../middleware/db')
-const ethers = require('ethers')
-const { handleError } = require('../../middleware/utils')
-const { matchedData } = require('express-validator')
+const { isIDGood, handleError } = require('../../middleware/utils')
 const { projectExistsByName } = require('./helpers')
+const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
+const ethers = require('ethers')
 /**
  * Create item function called by route
  * @param {Object} req - request object
@@ -16,6 +16,9 @@ const createProject = async (req, res) => {
     if (doesProjectExists) {
       return res.status(409).send(false)
     }
+    const tokenEncrypted = req.headers.authorization
+      .replace('Bearer ', '')
+      .trim()
     const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
 
     const CONTRACT_ADDRESS =
@@ -37,6 +40,14 @@ const createProject = async (req, res) => {
     if (req.file)
       req.body.imageURL = process.env.API_URL + 'uploads/' + req.file.filename
 
+    let userId = await getUserIdFromToken(tokenEncrypted)
+    userId = await isIDGood(userId)
+    const user = await findUserById(userId)
+    if (user.role === 'user' && user.ownedProjects >= 3)
+      return res
+        .status(409)
+        .send('User cannot own more than 3 projects at the same time')
+    if (user.role === 'admin') req.body.approveStatus = 'ACTIVE'
     await createItem(req.body, PendingProject)
 
     let tx = await racksPMSigner.createProject(

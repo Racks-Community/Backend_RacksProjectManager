@@ -34,6 +34,10 @@ const EventSchema = new mongoose.Schema(
       type: String,
       default: process.env.API_URL + 'images/racks.png'
     },
+    approveStatus: {
+      type: String,
+      default: 'PENDING'
+    },
     owner: { type: Schema.Types.ObjectId, ref: 'User', required: true }
   },
   {

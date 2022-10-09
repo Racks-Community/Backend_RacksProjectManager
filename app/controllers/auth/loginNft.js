@@ -37,7 +37,6 @@ const loginNft = async (req, res) => {
     const user = (await getItemSearch({ address: address }, User))[0]
     if (!user) {
       let userRegister = {
-        name: req.name ? req.name : address,
         email: req.email ? req.email : address + '@racks.com',
         password: req.password
           ? req.password
