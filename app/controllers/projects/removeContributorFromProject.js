@@ -64,12 +64,12 @@ const removeContributorFromProject = async (req, res) => {
         if (process.env.DISCORD_BOT_TOKEN != 'void') {
           await removeRolesFromMember(projectModel.name, contributor.discord)
         }
-        // if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
-        //   await removeRepositoryContributor(
-        //     projectModel.name,
-        //     contributor.githubUsername
-        //   )
-        // }
+        if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
+          await removeRepositoryContributor(
+            projectModel.name,
+            contributor.githubUsername
+          )
+        }
         res.status(200).json(resData)
       } catch (error) {
         handleError(res, error)

@@ -1,8 +1,10 @@
 const User = require('../../models/user')
+const Project = require('../../models/project')
 const { matchedData } = require('express-validator')
 const { handleError } = require('../../middleware/utils')
 const { getItemSearch, updateItemSearch } = require('../../middleware/db')
 const { validateHolderInternal } = require('../../middleware/auth')
+const { getItemsCustom } = require('../../middleware/db')
 const {
   banMemberFromGuild,
   unbanMemberFromGuild
@@ -42,7 +44,7 @@ const banContributor = async (req, res) => {
       RacksPmAbi,
       provider
     )
-    let bannedState = req.banned === 'true'
+    let bannedState = req.banned == true
     const isContributor = await racksPM.isWalletContributor(req.address)
     if (isContributor) {
       try {
@@ -58,6 +60,19 @@ const banContributor = async (req, res) => {
           let contributor = (
             await getItemSearch({ address: req.address }, User)
           )[0]
+
+          if (isBanned) {
+            let projects = await getItemsCustom(Project)
+            if (projects) {
+              for (let [index, project] of projects.entries()) {
+                const contrIndex = project.contributors.indexOf(contributor._id)
+                if (contrIndex > -1) {
+                  project.contributors.splice(contrIndex, 1)
+                  await project.save()
+                }
+              }
+            }
+          }
 
           if (process.env.DISCORD_BOT_TOKEN != 'void') {
             if (bannedState) await banMemberFromGuild(contributor.discord)

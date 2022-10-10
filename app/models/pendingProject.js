@@ -38,6 +38,10 @@ const EventSchema = new mongoose.Schema(
       type: String,
       default: 'PENDING'
     },
+    visibleForAll: {
+      type: Boolean,
+      default: false
+    },
     owner: { type: Schema.Types.ObjectId, ref: 'User', required: true }
   },
   {

@@ -48,6 +48,7 @@ const loginNft = async (req, res) => {
       const response = await returnRegisterToken(item, userInfo)
       res.status(201).json(response)
     } else {
+      if (user.banned) return res.status(409).send('User banned')
       await saveLoginAttemptsToDB(user)
       res.status(200).json(await saveUserAccessAndReturnToken(req, user))
     }

@@ -27,7 +27,8 @@ const getProjects = async (req, res) => {
       projects = projects.filter(
         (project) =>
           project.reputationLevel <= user.reputationLevel ||
-          user.id === project.owner + ''
+          user.id === project.owner + '' ||
+          project.visibleForAll
       )
       return res.status(200).send(projects)
     }

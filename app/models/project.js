@@ -54,6 +54,10 @@ const EventSchema = new mongoose.Schema(
     completedAt: {
       type: Date
     },
+    visibleForAll: {
+      type: Boolean,
+      default: false
+    },
     githubRepository: {
       type: String,
       validate: {

@@ -37,6 +37,9 @@ const createProjectWebhook = async (req, res) => {
       if (pendingProject.requirements) {
         newProject.requirements = pendingProject.requirements
       }
+      if (pendingProject.visibleForAll) {
+        newProject.visibleForAll = pendingProject.visibleForAll
+      }
       await deleteItemSearch({ name: req.newProjectName }, PendingProject)
       saveRes = await createItem(newProject, Project)
 
