@@ -1,14 +1,14 @@
 # Racks Project Manager
 
-## Relevant Endpoints
+## API Docuentation with Postman
 
-- POST /login
-- POST /loginNft
-- POST-GET /projects
-- PATCH /users/contributor/:address (Register contributor)
-- POST /projects/add-contributor/:address (Add contributor to project)
-- POST /projects/completed/:address (Complete project)
-- POST /create-local-admin (Create first Admin with local environment values)
+https://documenter.getpostman.com/view/11970151/2s847HQCqn
+
+First install all dependencies with 
+```bash
+npm install
+```
+Afterwards you have to set up your Github and Discord Access Tokens.
 
 ## Github
 
@@ -50,6 +50,32 @@ Our Discord Implementation:
 - On Project Created, a new category channel with the associated text and voice channels will be created with the permissions set so only admins and members with the project role will be able to see and use the new channels.
 - When a holder upgrades to Contributor, he receives an invite to the Racks Dao Server.
 - When a Contributor joins a project, he will be granted with the project role so he has access to the respective channels.
+
+## Database and Starting Server
+
+We just use a MongoDB instance.
+
+### Run the main server like this:
+
+```bash
+npm run dev
+```
+
+When you first run the application, you can call 
+```bash
+POST/create-local-admin
+```
+to create the universal admin user.
+
+### Run the events server like this:
+
+```bash
+npm run events
+```
+
+This second server will connect to our Smart Contract and will be listening permanentelly to some events. When any of these events are triggered it makes a call to the main API to finish the process persisting the pending data to our database.
+
+It behaves like a Private Events Indexer.
 
 # Node.js express.js MongoDB JWT WEB 3 REST API // Base Documentation
 
