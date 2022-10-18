@@ -4,10 +4,10 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_ACCESS_TOKEN
 })
 
-const createRepository = (name, description) => {
+const createRepository = (name) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!name || !description) {
+      if (!name) {
         return reject(null)
       }
       name = formatName(name)
@@ -16,7 +16,7 @@ const createRepository = (name, description) => {
       const response = await octokit.request('POST /orgs/{org}/repos', {
         org: process.env.GITHUB_ORGANIZATION,
         name: name,
-        description: description,
+        description: 'Racks Community Project',
         homepage: homepage,
         private: true,
         has_issues: false,
