@@ -50,6 +50,7 @@ const completeProject = async (req, res) => {
       projectModel.completed = true
       projectModel.status = 'FINISHED'
       projectModel.completedAt = new Date()
+      projectModel.participationWeights = req.participationWeights
       for (let contrWallet of projectModel.contributors) {
         let contributor = (
           await getItemSearch({ _id: contrWallet + '' }, User)

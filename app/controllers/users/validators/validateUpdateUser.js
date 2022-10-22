@@ -12,7 +12,6 @@ const validateUpdateUser = [
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
-  check('name').optional(),
   check('email').optional(),
   check('discord').optional(),
   check('country').optional(),

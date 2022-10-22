@@ -36,7 +36,6 @@ const validateUpdateUserToContributor = [
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
-  check('name').optional(),
   check('country').optional(),
   check('urlTwitter')
     .optional()

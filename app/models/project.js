@@ -69,7 +69,13 @@ const EventSchema = new mongoose.Schema(
       lowercase: true
     },
     contributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    owner: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+    owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    participationWeights: [
+      {
+        type: Number,
+        default: 0
+      }
+    ]
   },
   {
     versionKey: false,

@@ -6,12 +6,6 @@ const { check } = require('express-validator')
  * Validates create new item request
  */
 const validateCreateUser = [
-  check('name')
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY'),
   check('email')
     .exists()
     .withMessage('MISSING')

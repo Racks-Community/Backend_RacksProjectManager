@@ -48,7 +48,7 @@ const validateCreateProject = [
     .withMessage('IS_EMPTY')
     .trim(),
   check('requirements').optional(),
-  check('imageURL').optional(),
+  check('visibleForAll').optional(),
   (req, res, next) => {
     validateResult(req, res, next)
   }

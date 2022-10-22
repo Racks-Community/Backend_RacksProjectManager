@@ -24,6 +24,7 @@ const {
 
 const {
   validateApproveProject,
+  validateCreateProject,
   validateCreateProjectWebhook,
   validateGetProject,
   validateUpdateProject,
@@ -59,6 +60,7 @@ router.post(
   requireAuth,
   roleAuthorization(['user', 'admin']),
   trimRequest.all,
+  validateCreateProject,
   createProject
 )
 
