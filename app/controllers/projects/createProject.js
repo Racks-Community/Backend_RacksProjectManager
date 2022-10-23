@@ -52,7 +52,7 @@ const createProject = async (req, res) => {
 
     let tx = await racksPMSigner.createProject(
       req.body.name,
-      req.body.colateralCost,
+      ethers.utils.parseEther(req.body.colateralCost + ''),
       req.body.reputationLevel,
       req.body.maxContributorsNumber
     )

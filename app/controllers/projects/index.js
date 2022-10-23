@@ -7,6 +7,7 @@ const { getProjects } = require('./getProjects')
 const { updateProject } = require('./updateProject')
 const { completeProject } = require('./completeProject')
 const { approveProject } = require('./approveProject')
+const { fundProjectWebhook } = require('./fundProjectWebhook')
 const { addContributorToProject } = require('./addContributorToProject')
 const {
   removeContributorFromProject
@@ -23,6 +24,7 @@ module.exports = {
   updateProject,
   approveProject,
   completeProject,
+  fundProjectWebhook,
   addContributorToProject,
   removeContributorFromProject,
   getProjectParticipation

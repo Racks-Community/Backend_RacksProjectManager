@@ -19,6 +19,7 @@ const {
   completeProject,
   deleteProject,
   approveProject,
+  fundProjectWebhook,
   getProjectParticipation
 } = require('../controllers/projects')
 
@@ -30,6 +31,7 @@ const {
   validateUpdateProject,
   validateAddContributorToProject,
   validateCompleteProject,
+  validateFundProject,
   validateDeleteProject,
   validateRemoveContributorFromProject
 } = require('../controllers/projects/validators')
@@ -159,6 +161,18 @@ router.post(
   trimRequest.all,
   validateApproveProject,
   approveProject
+)
+
+/*
+ * Fund Project route
+ */
+router.post(
+  '/fund/:address',
+  requireAuth,
+  roleAuthorization(['user']),
+  trimRequest.all,
+  validateFundProject,
+  fundProjectWebhook
 )
 
 /*

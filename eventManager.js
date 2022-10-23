@@ -24,43 +24,7 @@ const startEventManager = async () => {
       password: process.env.ADMIN_PASSWORD
     }
 
-    racksPM.on(
-      'newProjectCreated',
-      async (newProjectName, newProjectAddress) => {
-        let token = ''
-        const res = await fetch(process.env.API_URL + 'login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(loginData)
-        })
-
-        if (res?.ok) {
-          const data = await res.json()
-          token = data.token
-        } else {
-          console.log('Login error')
-          process.exit(1)
-        }
-
-        const projectData = {
-          newProjectName,
-          newProjectAddress
-        }
-        await fetch(process.env.API_URL + 'projects/webhook', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: token
-          },
-          body: JSON.stringify(projectData)
-        })
-      }
-    )
-
-    racksPM.on('newContributorRegistered', async (newContributorAddress) => {
-      let token = ''
+    const getToken = async () => {
       const res = await fetch(process.env.API_URL + 'login', {
         method: 'POST',
         headers: {
@@ -71,27 +35,54 @@ const startEventManager = async () => {
 
       if (res?.ok) {
         const data = await res.json()
-        token = data.token
+        return data.token
       } else {
         console.log('Login error')
-        process.exit(1)
+        return null
       }
+    }
 
-      await fetch(
-        process.env.API_URL +
-          'users/contributor/webhook/' +
-          newContributorAddress,
-        {
-          method: 'PATCH',
-          headers: {
-            Authorization: token
+    racksPM.on(
+      'newProjectCreated',
+      async (newProjectName, newProjectAddress) => {
+        const token = await getToken()
+
+        if (token) {
+          const projectData = {
+            newProjectName,
+            newProjectAddress
           }
+          await fetch(process.env.API_URL + 'projects/webhook', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: token
+            },
+            body: JSON.stringify(projectData)
+          })
         }
-      )
+      }
+    )
+
+    racksPM.on('newContributorRegistered', async (newContributorAddress) => {
+      const token = await getToken()
+
+      if (token) {
+        await fetch(
+          process.env.API_URL +
+            'users/contributor/webhook/' +
+            newContributorAddress,
+          {
+            method: 'PATCH',
+            headers: {
+              Authorization: token
+            }
+          }
+        )
+      }
     })
   } catch (error) {
     console.log(error)
-    process.exit(1)
   }
 }
 

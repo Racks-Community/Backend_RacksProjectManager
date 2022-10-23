@@ -75,7 +75,11 @@ const EventSchema = new mongoose.Schema(
         type: Number,
         default: 0
       }
-    ]
+    ],
+    funds: {
+      type: Number,
+      default: 0
+    }
   },
   {
     versionKey: false,

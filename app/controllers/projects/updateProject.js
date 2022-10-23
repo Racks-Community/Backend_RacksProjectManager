@@ -49,7 +49,9 @@ const updateProject = async (req, res) => {
       }
 
       if (req.body.colateralCost) {
-        let tx = await projectSigner.setColateralCost(req.body.colateralCost)
+        let tx = await projectSigner.setColateralCost(
+          ethers.utils.parseEther(req.body.colateralCost + '')
+        )
         await tx.wait()
       }
 

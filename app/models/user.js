@@ -41,7 +41,8 @@ const UserSchema = new mongoose.Schema(
     },
     discord: {
       type: String,
-      unique: true
+      unique: true,
+      sparse: true
     },
     urlTwitter: {
       type: String,
@@ -55,7 +56,8 @@ const UserSchema = new mongoose.Schema(
     },
     githubUsername: {
       type: String,
-      unique: true
+      unique: true,
+      sparse: true
     },
     country: {
       type: String
