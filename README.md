@@ -23,9 +23,13 @@ npm i octokit
 - On Project Created, a new repository with the same name will be created in Racks Community Organization.
 - When a Contributor joins a project he receives an invitation to join the repository with write permissions.
 - When finishing a project, the admin will get an approximated meassure of every contributor's participation.
+
   . It is calculated based on the number of commits.
+
   . It is important to follow commit convention, including [mid] or [high] in the commit message, to calculate properly the commit's weight.
+
   . This calculation isn't deffinitive but just an approximation, which must be object of discussion between admin and contributors.
+
 - After completting a project, the Contributor will receive an invitation to join the Racks Community Organization.
 
 ## Discord
