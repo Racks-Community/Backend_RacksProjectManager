@@ -26,11 +26,11 @@ npm i octokit
 
   . It is calculated based on the number of commits.
 
-  . It is important to follow commit convention, including [mid] or [high] in the commit message, to calculate properly the commit's weight.
+  . It is important to follow commit convention, including [mid] or [high] (or empty if it's a simple commit) in the commit message, to calculate properly the commit's weight.
 
   . This calculation isn't deffinitive but just an approximation, which must be object of discussion between admin and contributors.
 
-- After completting a project, the Contributor will receive an invitation to join the Racks Community Organization.
+- After completting a project, the Contributor will receive an invite to join the Racks Community Organization.
 
 ## Discord
 
