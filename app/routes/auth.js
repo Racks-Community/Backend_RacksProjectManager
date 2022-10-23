@@ -10,8 +10,6 @@ const trimRequest = require('trim-request')
 const {
   login,
   register,
-  forgotPassword,
-  resetPassword,
   verify,
   getRefreshToken,
   roleAuthorization,
@@ -21,16 +19,12 @@ const {
 
 const {
   validateRegister,
-  validateForgotPassword,
-  validateResetPassword,
   validateLogin,
   validateVerify,
   validateLoginNft
 } = require('../controllers/auth/validators')
 
 const { discordInvite } = require('../controllers/auth/helpers/discordInvite')
-
-const { mintTest } = require('../middleware/auth/mintTest')
 
 const { createLocalAdmin } = require('../middleware/auth/createLocalAdmin')
 
@@ -81,8 +75,6 @@ router.post('/loginnft', trimRequest.all, validateLoginNft, loginNft)
 router.get('/validateholder', trimRequest.all, validateHolder)
 
 router.post('/create-local-admin', trimRequest.all, createLocalAdmin)
-
-router.get('/mintTest', trimRequest.all, mintTest)
 
 router.get('/nonce', trimRequest.all, nonce)
 

@@ -176,14 +176,11 @@ const getContributorsParticipation = (name) => {
       }
       const MID_DIFFICULTY = '[mid]'
       const HIGH_DIFFICULTY = '[high]'
-      // name = 'RacksProjectManager'
-      // org = 'Racks-Community'
       name = formatName(name)
       const commits = await octokit.request(
         'GET /repos/{owner}/{repo}/commits',
         {
           owner: process.env.GITHUB_ORGANIZATION,
-          // owner: org,
           repo: name
         }
       )
