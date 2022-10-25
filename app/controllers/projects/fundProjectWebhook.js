@@ -24,7 +24,7 @@ const fundProjectWebhook = async (req, res) => {
     )
 
     const projectFunds = parseInt(
-      ethers.utils.formatEther(await projectContract.getProjectFunds())
+      ethers.utils.formatEther(await projectContract.getTotalAmountFunded())
     )
     let projectModel = (
       await getItemSearch({ address: req.address }, Project)
