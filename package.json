@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production pm2 start server.js",
-    "start-events": "cross-env NODE_ENV=production pm2 start server.js",
+    "start-events": "cross-env NODE_ENV=production pm2 start eventManager.js",
     "mocha": "nyc mocha --timeout=5000 --exit",
     "test": "npm run coverage:clean && npm run test:unit && npm run test:e2e && npm run coverage",
     "test:unit": "cross-env NODE_ENV=test jest --coverage",
