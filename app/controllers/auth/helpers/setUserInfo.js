@@ -15,6 +15,8 @@ const setUserInfo = (req = {}) => {
       contributor: req.contributor,
       verified: req.verified,
       banned: req.banned,
+      country: req.country,
+      urlTwitter: req.urlTwitter,
       reputationLevel: req.reputationLevel,
       reputationPoints: req.reputationPoints,
       totalProjects: req.totalProjects,
