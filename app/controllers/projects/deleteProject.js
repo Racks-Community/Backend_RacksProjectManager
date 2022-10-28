@@ -50,8 +50,8 @@ const deleteProject = async (req, res) => {
     )
     let projectSigner = projectContract.connect(wallet)
 
-    let tx = await projectSigner.deleteProject()
-    await tx.wait()
+    // let tx = await projectSigner.deleteProject()
+    // await tx.wait()
 
     let deleteRes = false
     if (tx.hash) {
