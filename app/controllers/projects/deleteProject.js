@@ -56,6 +56,7 @@ const deleteProject = async (req, res) => {
     let deleteRes = false
     if (tx.hash) {
       const isDeleted = await projectContract.isDeleted()
+      console.warning(isDeleted, 'isDeleted')
       if (isDeleted) {
         const owner = await findUserById(project.owner + '')
         if (owner.role === 'user') {
@@ -74,6 +75,7 @@ const deleteProject = async (req, res) => {
     }
     return res.status(200).json(deleteRes)
   } catch (error) {
+    console.error(error)
     handleError(res, error)
   }
 }
