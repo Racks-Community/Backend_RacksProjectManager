@@ -64,7 +64,7 @@ const deleteProject = async (req, res) => {
         await owner.save()
       }
       deleteRes = await deleteItemSearch({ address: req.address }, Project)
-
+      console.log(process.env.GITHUB_ACCESS_TOKEN, 'github')
       if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
         if (project.githubRepository) await deleteRepository(project.name)
       }
