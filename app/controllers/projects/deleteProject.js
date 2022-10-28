@@ -50,29 +50,29 @@ const deleteProject = async (req, res) => {
     )
     let projectSigner = projectContract.connect(wallet)
 
-    // let tx = await projectSigner.deleteProject()
-    // await tx.wait()
+    let tx = await projectSigner.deleteProject()
+    await tx.wait()
 
     let deleteRes = false
-    // if (tx.hash) {
-    const isDeleted = await projectContract.isDeleted()
-    console.log(isDeleted, 'isDeleted')
-    if (isDeleted) {
-      const owner = await findUserById(project.owner + '')
-      if (owner.role === 'user') {
-        owner.ownedProjects--
-        await owner.save()
-      }
-      deleteRes = await deleteItemSearch({ address: req.address }, Project)
-      console.log(process.env.GITHUB_ACCESS_TOKEN, 'github')
-      if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
-        if (project.githubRepository) await deleteRepository(project.name)
-      }
-      if (process.env.DISCORD_BOT_TOKEN != 'void') {
-        await deleteProjectChannels(project.name)
+    if (tx.hash) {
+      const isDeleted = await projectContract.isDeleted()
+      console.log(isDeleted, 'isDeleted')
+      if (isDeleted) {
+        const owner = await findUserById(project.owner + '')
+        if (owner.role === 'user') {
+          owner.ownedProjects--
+          await owner.save()
+        }
+        deleteRes = await deleteItemSearch({ address: req.address }, Project)
+        console.log(process.env.GITHUB_ACCESS_TOKEN, 'github')
+        if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
+          if (project.githubRepository) await deleteRepository(project.name)
+        }
+        if (process.env.DISCORD_BOT_TOKEN != 'void') {
+          await deleteProjectChannels(project.name)
+        }
       }
     }
-    // }
     return res.status(200).json(deleteRes)
   } catch (error) {
     console.error(error)
