@@ -56,7 +56,6 @@ const deleteProject = async (req, res) => {
     let deleteRes = false
     if (tx.hash) {
       const isDeleted = await projectContract.isDeleted()
-      console.log(isDeleted, 'isDeleted')
       if (isDeleted) {
         const owner = await findUserById(project.owner + '')
         if (owner.role === 'user') {
@@ -64,7 +63,6 @@ const deleteProject = async (req, res) => {
           await owner.save()
         }
         deleteRes = await deleteItemSearch({ address: req.address }, Project)
-        console.log(process.env.GITHUB_ACCESS_TOKEN, 'github')
         if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
           if (project.githubRepository) await deleteRepository(project.name)
         }

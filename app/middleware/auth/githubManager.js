@@ -1,4 +1,5 @@
 const { Octokit } = require('octokit')
+const fetch = require('node-fetch')
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_ACCESS_TOKEN
@@ -155,18 +156,48 @@ const deleteRepository = (name) => {
         return reject(null)
       }
       name = formatName(name)
-      await octokit.request('DELETE /repos/{owner}/{repo}', {
-        owner: process.env.GITHUB_ORGANIZATION,
-        repo: name
-      })
-
-      resolve()
+      const res = await fetch(
+        'https://api.github.com/repos/' +
+          process.env.GITHUB_ORGANIZATION +
+          '/' +
+          name,
+        {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/vnd.github+json',
+            Authorization: 'Bearer ' + process.env.GITHUB_ACCESS_TOKEN
+          }
+        }
+      )
+      if (res?.ok) {
+        resolve()
+      }
     } catch (error) {
       console.log(error)
       reject(error)
     }
   })
 }
+
+// const deleteRepositoryOctokit = (name) => {
+//   return new Promise(async (resolve, reject) => {
+//     try {
+//       if (!name) {
+//         return reject(null)
+//       }
+//       name = formatName(name)
+//       await octokit.request('DELETE /repos/{owner}/{repo}', {
+//         owner: process.env.GITHUB_ORGANIZATION,
+//         repo: name
+//       })
+
+//       resolve()
+//     } catch (error) {
+//       console.log(error)
+//       reject(error)
+//     }
+//   })
+// }
 
 const getContributorsParticipation = (name) => {
   return new Promise(async (resolve, reject) => {
