@@ -1,7 +1,6 @@
 const { isIDGood, handleError } = require('../../../middleware/utils')
 const { getUserIdFromToken } = require('./getUserIdFromToken')
 const { findUserById } = require('./findUserById')
-const { getInviteLink } = require('../../../middleware/auth/discordManager')
 
 const discordInvite = async (req, res) => {
   try {
@@ -15,7 +14,7 @@ const discordInvite = async (req, res) => {
     if (!user.contributor || !user.verified)
       return res.status(500).json({ message: 'No verified Contributor' })
 
-    res.status(200).json(await getInviteLink())
+    res.status(200).json(process.env.DISCORD_INVITE_LINK)
   } catch (error) {
     handleError(res, error)
   }

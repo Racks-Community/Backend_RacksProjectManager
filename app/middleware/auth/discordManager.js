@@ -88,26 +88,6 @@ const createChannels = async (name) => {
   })
 }
 
-const getInviteLink = async () => {
-  return new Promise((resolve, reject) => {
-    const client = new Client({
-      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
-    })
-    client.on('ready', async () => {
-      try {
-        const guild = await client.guilds.fetch(guildId)
-        const invite = await guild.invites.create(
-          process.env.DISCORD_WELCOME_CHANNEL_ID
-        )
-        resolve(`https://discord.gg/${invite.code}`)
-      } catch (e) {
-        reject(e)
-      }
-    })
-    client.login(process.env.DISCORD_BOT_TOKEN)
-  })
-}
-
 const grantRolesToMember = async (projectName, username) => {
   return new Promise((resolve, reject) => {
     if (!username || !projectName) {
@@ -249,7 +229,6 @@ const deleteProjectChannels = async (projectName) => {
 
 module.exports = {
   createChannels,
-  getInviteLink,
   grantRolesToMember,
   deleteProjectChannels,
   removeRolesFromMember,
