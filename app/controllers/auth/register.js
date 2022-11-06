@@ -20,7 +20,7 @@ const register = async (req, res) => {
     req = matchedData(req)
     const doesEmailExists = await emailExists(req.email)
     const isHolder = await validateHolderInternal(req.address)
-    if (isHolder < 1)
+    if (!isHolder)
       return res.status(404).json({ message: 'you need at least 1 token' })
     if (!doesEmailExists) {
       const item = await registerUser(req)

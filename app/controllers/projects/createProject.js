@@ -31,7 +31,7 @@ const createProject = async (req, res) => {
     let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
 
     const racksPM = new ethers.Contract(
-      CONTRACT_ADDRESS.RacksProjectManager[0],
+      CONTRACT_ADDRESS.RacksProjectManager,
       RacksPmAbi,
       provider
     )

@@ -16,7 +16,7 @@ const updateUser = async (req, res) => {
       .trim()
     req = matchedData(req)
     const isHolder = await validateHolderInternal(req.address)
-    if (isHolder < 1)
+    if (!isHolder)
       return res.status(404).json({ message: 'you need at least 1 token' })
 
     let userId = await getUserIdFromToken(tokenEncrypted)

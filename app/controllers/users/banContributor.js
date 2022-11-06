@@ -25,7 +25,7 @@ const banContributor = async (req, res) => {
   try {
     req = matchedData(req)
     const isHolder = await validateHolderInternal(req.address)
-    if (isHolder < 1)
+    if (!isHolder)
       return res.status(404).json({ message: 'you need at least 1 token' })
 
     const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
@@ -40,7 +40,7 @@ const banContributor = async (req, res) => {
     let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
 
     const racksPM = new ethers.Contract(
-      CONTRACT_ADDRESS.RacksProjectManager[0],
+      CONTRACT_ADDRESS.RacksProjectManager,
       RacksPmAbi,
       provider
     )

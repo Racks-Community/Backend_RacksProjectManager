@@ -14,7 +14,7 @@ const startEventManager = async () => {
       process.env.RPC_PROVIDER
     )
     const racksPM = new ethers.Contract(
-      CONTRACT_ADDRESS.RacksProjectManager[0],
+      CONTRACT_ADDRESS.RacksProjectManager,
       RacksPmAbi,
       provider
     )

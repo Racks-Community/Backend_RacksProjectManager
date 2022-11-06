@@ -1,6 +1,6 @@
 const { handleError } = require('../utils/handleError')
 const ethers = require('ethers')
-const { contractAddresses, MrCryptoAbi } = require('../../../web3Constants')
+const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
 
 const validateHolder = async (req, res, next) => {
   try {
@@ -17,18 +17,18 @@ const validateHolder = async (req, res, next) => {
       process.env.RPC_PROVIDER
     )
 
-    const mrCrypto = new ethers.Contract(
-      CONTRACT_ADDRESS.MRCRYPTO[0],
-      MrCryptoAbi,
+    const racksPM = new ethers.Contract(
+      CONTRACT_ADDRESS.RacksProjectManager,
+      RacksPmAbi,
       provider
     )
 
-    const nftBalance = await mrCrypto.balanceOf(address)
+    const isHolder = await racksPM.isHolder(address)
 
-    if (nftBalance < 1)
+    if (!isHolder)
       return res.status(400).json({ message: 'you need at least 1 token' })
 
-    res.status(200).json({ nfts: nftBalance.toString() })
+    res.status(200).json({ isHolder: isHolder })
   } catch (error) {
     handleError(res, error)
   }
@@ -48,13 +48,13 @@ const validateHolderInternal = (address) => {
         process.env.RPC_PROVIDER
       )
 
-      const mrCrypto = new ethers.Contract(
-        CONTRACT_ADDRESS.MRCRYPTO[0],
-        MrCryptoAbi,
+      const racksPM = new ethers.Contract(
+        CONTRACT_ADDRESS.RacksProjectManager,
+        RacksPmAbi,
         provider
       )
-      const nftBalance = await mrCrypto.balanceOf(address)
-      resolve(parseInt(nftBalance.toString()))
+      const isHolder = await racksPM.isHolder(address)
+      resolve(isHolder)
     } catch (error) {
       console.log(error)
       reject(error)

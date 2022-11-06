@@ -32,8 +32,9 @@ const loginNft = async (req, res) => {
     if (nonce != NonceCompare[0].nonce)
       return res.status(404).json({ message: 'error nonce compare' })
     const isHolder = await validateHolderInternal(address)
-    if (isHolder < 1)
+    if (!isHolder)
       return res.status(404).json({ message: 'you need at least 1 token' })
+
     const user = (await getItemSearch({ address: address }, User))[0]
     if (!user) {
       let userRegister = {

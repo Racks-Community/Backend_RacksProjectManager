@@ -16,7 +16,7 @@ const validateNftsAddress = (nftn) => {
       )
 
       const mrCrypto = new ethers.Contract(
-        CONTRACT_ADDRESS.MRCRYPTO[0],
+        CONTRACT_ADDRESS.MRCRYPTO,
         MrCryptoAbi,
         provider
       )

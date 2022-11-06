@@ -16,11 +16,12 @@ const getNfts = (address) => {
       )
 
       const mrCrypto = new ethers.Contract(
-        CONTRACT_ADDRESS.MRCRYPTO[0],
+        CONTRACT_ADDRESS.MRCRYPTO,
         MrCryptoAbi,
         provider
       )
       const nfts = await mrCrypto.walletOfOwner(address)
+
       resolve(nfts.toString())
     } catch (error) {
       reject(error)
