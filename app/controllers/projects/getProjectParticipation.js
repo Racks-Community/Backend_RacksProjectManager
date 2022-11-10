@@ -30,6 +30,7 @@ const getProjectParticipation = async (req, res) => {
     if (!participations)
       return res.status(409).send('Project repository is empty.')
 
+    let contrParticipations = []
     for (let [i, contribution] of participations.entries()) {
       let contributor = (
         await getItemSearch(
@@ -38,14 +39,14 @@ const getProjectParticipation = async (req, res) => {
         )
       )[0]
       if (contributor) {
-        contribution.address = contributor.address
-        contribution.participation = Math.trunc(contribution.participation)
-      } else {
-        participations.splice(i, 1)
+        let contr = contribution
+        contr.address = contributor.address
+        contr.participation = Math.trunc(contribution.participation)
+        contrParticipations.push(contr)
       }
     }
 
-    return res.status(200).json(participations)
+    return res.status(200).json(contrParticipations)
   } catch (error) {
     handleError(res, error)
   }
