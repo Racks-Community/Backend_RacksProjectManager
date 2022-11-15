@@ -47,6 +47,7 @@ const validateCreateProject = [
     .isEmpty()
     .withMessage('IS_EMPTY')
     .trim(),
+  check('details').optional(),
   check('requirements').optional(),
   check('visibleForAll').optional(),
   (req, res, next) => {

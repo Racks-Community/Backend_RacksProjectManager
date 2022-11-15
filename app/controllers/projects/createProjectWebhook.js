@@ -34,6 +34,9 @@ const createProjectWebhook = async (req, res) => {
         imageURL: pendingProject.imageURL,
         address: req.newProjectAddress
       }
+      if (pendingProject.details) {
+        newProject.details = pendingProject.details
+      }
       if (pendingProject.requirements) {
         newProject.requirements = pendingProject.requirements
       }
