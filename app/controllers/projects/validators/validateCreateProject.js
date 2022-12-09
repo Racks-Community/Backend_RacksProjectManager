@@ -50,6 +50,7 @@ const validateCreateProject = [
   check('details').optional(),
   check('requirements').optional(),
   check('visibleForAll').optional(),
+  check('githubRepository').optional(),
   (req, res, next) => {
     validateResult(req, res, next)
   }

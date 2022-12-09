@@ -32,16 +32,11 @@ const createProjectWebhook = async (req, res) => {
         maxContributorsNumber: pendingProject.maxContributorsNumber,
         owner: pendingProject.owner,
         imageURL: pendingProject.imageURL,
-        address: req.newProjectAddress
-      }
-      if (pendingProject.details) {
-        newProject.details = pendingProject.details
-      }
-      if (pendingProject.requirements) {
-        newProject.requirements = pendingProject.requirements
-      }
-      if (pendingProject.visibleForAll) {
-        newProject.visibleForAll = pendingProject.visibleForAll
+        address: req.newProjectAddress,
+        details: pendingProject.details || '',
+        requirements: pendingProject.requirements,
+        visibleForAll: pendingProject.visibleForAll || false,
+        githubRepository: pendingProject.githubRepository || ''
       }
       await deleteItemSearch({ name: req.newProjectName }, PendingProject)
       saveRes = await createItem(newProject, Project)

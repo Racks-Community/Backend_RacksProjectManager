@@ -1,6 +1,7 @@
 const mongoose = require('mongoose'),
   Schema = mongoose.Schema
 const mongoosePaginate = require('mongoose-paginate-v2')
+const validator = require('validator')
 
 const EventSchema = new mongoose.Schema(
   {
@@ -16,7 +17,8 @@ const EventSchema = new mongoose.Schema(
       type: String
     },
     requirements: {
-      type: String
+      type: String,
+      required: true
     },
     reputationLevel: {
       type: Number,
@@ -44,6 +46,16 @@ const EventSchema = new mongoose.Schema(
     visibleForAll: {
       type: Boolean,
       default: false
+    },
+    githubRepository: {
+      type: String,
+      validate: {
+        validator(v) {
+          return v === '' ? true : validator.isURL(v)
+        },
+        message: 'NOT_A_VALID_URL'
+      },
+      lowercase: true
     },
     owner: { type: Schema.Types.ObjectId, ref: 'User', required: true }
   },

@@ -37,7 +37,11 @@ const approveProjectInternal = async (projectAddress, approve) => {
         const isActive = await projectContract.isActive()
         if (isActive) {
           projectModel.approveStatus = 'ACTIVE'
-          if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
+          if (
+            process.env.GITHUB_ACCESS_TOKEN != 'void' &&
+            (!projectModel.githubRepository ||
+              projectModel.githubRepository === '')
+          ) {
             projectModel.githubRepository = await createRepository(
               projectModel.name
             )
