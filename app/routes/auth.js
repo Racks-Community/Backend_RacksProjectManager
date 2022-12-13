@@ -25,9 +25,8 @@ const {
 } = require('../controllers/auth/validators')
 
 const { discordInvite } = require('../controllers/auth/helpers/discordInvite')
-
 const { createLocalAdmin } = require('../middleware/auth/createLocalAdmin')
-
+const { getAdmin } = require('../middleware/auth/getAdmin')
 const { validateHolder } = require('../middleware/auth/validateHolder')
 
 /*
@@ -75,6 +74,14 @@ router.post('/loginnft', trimRequest.all, validateLoginNft, loginNft)
 router.get('/validateholder', trimRequest.all, validateHolder)
 
 router.post('/create-local-admin', trimRequest.all, createLocalAdmin)
+
+router.get(
+  '/getAdminId',
+  requireAuth,
+  roleAuthorization(['user', 'admin']),
+  trimRequest.all,
+  getAdmin
+)
 
 router.get('/nonce', trimRequest.all, nonce)
 

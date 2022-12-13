@@ -9,6 +9,7 @@ const createLocalAdmin = async (req, res) => {
       email: process.env.EMAIL_FROM_ADDRESS,
       password: process.env.ADMIN_PASSWORD,
       address: process.env.ADMIN_ADDRESS,
+      avatar: process.env.ADMIN_AVATAR,
       role: 'admin'
     }
     const doesEmailExists = await emailExists(args.email)
