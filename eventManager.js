@@ -1,4 +1,3 @@
-// const axios = require('axios').default
 const fetch = require('node-fetch')
 const ethers = require('ethers')
 const { contractAddresses, RacksPmAbi } = require('./web3Constants')
