@@ -8,7 +8,7 @@
     "url": "https://github.com/davellanedam/node-express-mongodb-jwt-rest-api-skeleton.git"
   },
   "scripts": {
-    "start": "concurrently \"cross-env NODE_ENV=production nodemon --inspect=9231 eventManager.js\" \"cross-env NODE_ENV=development nodemon --inspect=9230 server.js\"",
+    "start": "concurrently \"cross-env NODE_ENV=production pm2 start eventManager.js\" \"cross-env NODE_ENV=production pm2 start server.js\"",
     "dev": "concurrently \"cross-env NODE_ENV=development nodemon --inspect=9231 eventManager.js\" \"cross-env NODE_ENV=development nodemon --inspect=9230 server.js\"",
     "api": "cross-env NODE_ENV=development nodemon --inspect=9230 server.js",
     "events": "cross-env NODE_ENV=development nodemon --inspect=9231 eventManager.js",
