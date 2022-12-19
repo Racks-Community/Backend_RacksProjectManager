@@ -1,6 +1,10 @@
 const { handleError } = require('../utils/handleError')
 const ethers = require('ethers')
-const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
+const {
+  contractAddresses,
+  RacksPmAbi,
+  HolderValidationAbi
+} = require('../../../web3Constants')
 
 const validateHolder = async (req, res, next) => {
   try {
@@ -23,7 +27,15 @@ const validateHolder = async (req, res, next) => {
       provider
     )
 
-    const isHolder = await racksPM.isHolder(address)
+    const holderValidationAddress = await racksPM.getHolderValidationInterface()
+
+    const holderValidation = new ethers.Contract(
+      holderValidationAddress,
+      HolderValidationAbi,
+      provider
+    )
+    const isHolder =
+      (await holderValidation.isHolder(address)) != ethers.constants.AddressZero
 
     if (!isHolder)
       return res.status(400).json({ message: 'you need at least 1 token' })
@@ -53,7 +65,18 @@ const validateHolderInternal = (address) => {
         RacksPmAbi,
         provider
       )
-      const isHolder = await racksPM.isHolder(address)
+
+      const holderValidationAddress =
+        await racksPM.getHolderValidationInterface()
+
+      const holderValidation = new ethers.Contract(
+        holderValidationAddress,
+        HolderValidationAbi,
+        provider
+      )
+      const isHolder =
+        (await holderValidation.isHolder(address)) !=
+        ethers.constants.AddressZero
       resolve(isHolder)
     } catch (error) {
       console.log(error)
