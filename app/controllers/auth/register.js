@@ -1,7 +1,9 @@
 const { matchedData } = require('express-validator')
 
 const { registerUser, setUserInfo, returnRegisterToken } = require('./helpers')
-const { validateHolderInternal } = require('../../middleware/auth')
+const {
+  validateHolderInternal
+} = require('../../middleware/external/contractCalls')
 const { handleError } = require('../../middleware/utils')
 const {
   emailExists,

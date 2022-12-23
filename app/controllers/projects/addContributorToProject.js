@@ -5,10 +5,15 @@ const { matchedData } = require('express-validator')
 const { getItemSearch } = require('../../middleware/db')
 const {
   addRepositoryContributor
-} = require('../../middleware/auth/githubManager')
-const { grantRolesToMember } = require('../../middleware/auth/discordManager')
+} = require('../../middleware/external/githubManager')
+const {
+  grantRolesToMember
+} = require('../../middleware/external/discordManager')
 const { ProjectAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
+const {
+  isContributorInProject
+} = require('../../middleware/external/contractCalls')
 
 /**
  * Update item function called by route
@@ -19,17 +24,8 @@ const addContributorToProject = async (req, res) => {
   try {
     req = matchedData(req)
 
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RPC_PROVIDER
-    )
-
-    const projectContract = new ethers.Contract(
+    const isProjectContributor = await isContributorInProject(
       req.address,
-      ProjectAbi,
-      provider
-    )
-
-    const isProjectContributor = await projectContract.isContributorInProject(
       req.contributorAddress
     )
     if (isProjectContributor) {

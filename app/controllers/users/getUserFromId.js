@@ -2,7 +2,6 @@ const User = require('../../models/user')
 const { matchedData } = require('express-validator')
 const { handleError } = require('../../middleware/utils')
 const { getItemSearch } = require('../../middleware/db')
-const { validateHolderInternal } = require('../../middleware/auth')
 /**
  * Get item function called by route
  * @param {Object} req - request object

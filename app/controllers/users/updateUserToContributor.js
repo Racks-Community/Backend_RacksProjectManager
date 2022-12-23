@@ -2,7 +2,9 @@ const PendingContributor = require('../../models/pendingContributor')
 const { matchedData } = require('express-validator')
 const { isIDGood, handleError } = require('../../middleware/utils')
 const { createItem } = require('../../middleware/db')
-const { validateHolderInternal } = require('../../middleware/auth')
+const {
+  validateHolderInternal
+} = require('../../middleware/external/contractCalls')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 
 /**

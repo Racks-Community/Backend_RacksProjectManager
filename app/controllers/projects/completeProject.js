@@ -5,11 +5,16 @@ const { matchedData } = require('express-validator')
 const { getItemSearch } = require('../../middleware/db')
 const {
   addOrganizationContributor
-} = require('../../middleware/auth/githubManager')
+} = require('../../middleware/external/githubManager')
 const { projectExistsByAddress } = require('./helpers')
 const { ProjectAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
 const { getUserFromId } = require('../users/getUserFromId')
+const {
+  projectIsFinished,
+  finishProject,
+  ProjectGetContributorByAddress
+} = require('../../middleware/external/contractCalls')
 
 /**
  * Update item function called by route
@@ -24,25 +29,14 @@ const completeProject = async (req, res) => {
       return res.status(404).send(false)
     }
 
-    const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
-
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RPC_PROVIDER
-    )
-
-    let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
-
-    const project = new ethers.Contract(req.address, ProjectAbi, provider)
-    let projectSigner = project.connect(wallet)
-
-    let tx = await projectSigner.finishProject(
+    await finishProject(
+      req.address,
       req.totalReputationPointsReward,
       req.contributors,
       req.participationWeights
     )
-    await tx.wait()
 
-    const completed = await project.isFinished()
+    const completed = await projectIsFinished(req.address)
     if (completed) {
       let projectModel = (
         await getItemSearch({ address: req.address }, Project)
@@ -55,7 +49,8 @@ const completeProject = async (req, res) => {
         let contributor = (
           await getItemSearch({ _id: contrWallet + '' }, User)
         )[0]
-        const contributorOnChain = await projectSigner.getContributorByAddress(
+        const contributorOnChain = await ProjectGetContributorByAddress(
+          req.address,
           contributor.address
         )
         contributor.reputationLevel = ethers.BigNumber.from(
@@ -66,12 +61,6 @@ const completeProject = async (req, res) => {
         ).toNumber()
         await contributor.save()
         await projectModel.save()
-        if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
-          await addOrganizationContributor(
-            contributor.githubUsername,
-            contributor.email
-          )
-        }
       }
       res.status(200).json(true)
     } else {

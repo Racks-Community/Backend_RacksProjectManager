@@ -117,14 +117,29 @@ const blockOrganizationContributor = (username) => {
       if (!username) {
         return reject(null)
       }
-      await octokit.request('PUT /orgs/{org}/blocks/{username}', {
-        org: process.env.GITHUB_ORGANIZATION,
-        username: username
-      })
+      const isMember = await octokit.request(
+        'GET /orgs/{org}/members/{username}',
+        {
+          org: process.env.GITHUB_ORGANIZATION,
+          username: username
+        }
+      )
+
+      if (isMember)
+        await octokit.request('DELETE /orgs/{org}/members/{username}', {
+          org: process.env.GITHUB_ORGANIZATION,
+          username: username
+        })
+      else
+        await octokit.request('PUT /orgs/{org}/blocks/{username}', {
+          org: process.env.GITHUB_ORGANIZATION,
+          username: username
+        })
 
       resolve()
     } catch (error) {
       console.log(error)
+      if (error.status == 404) resolve()
       reject(error)
     }
   })

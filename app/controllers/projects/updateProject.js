@@ -2,8 +2,11 @@ const Project = require('../../models/project')
 const { updateItemSearch, getItemSearch } = require('../../middleware/db')
 const { isIDGood, handleError } = require('../../middleware/utils')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
-const { ProjectAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
+const {
+  getProjectContract,
+  getAdminWallet
+} = require('../../middleware/external/contractCalls')
 
 /**
  * Update item function called by route
@@ -27,18 +30,8 @@ const updateProject = async (req, res) => {
         .status(409)
         .send('Integrity Conflict. User is not the Owner or Admin')
 
-    const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
-
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RPC_PROVIDER
-    )
-    let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
-
-    const projectContract = new ethers.Contract(
-      req.params.address,
-      ProjectAbi,
-      provider
-    )
+    const projectContract = await getProjectContract(req.params.address)
+    const wallet = await getAdminWallet()
     let projectSigner = projectContract.connect(wallet)
     try {
       if (req.body.reputationLevel) {

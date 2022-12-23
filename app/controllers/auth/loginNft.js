@@ -4,7 +4,9 @@ const { SiweMessage } = require('siwe')
 const { getItemSearch } = require('../../middleware/db')
 const User = require('../../models/user')
 const userAccessAddress = require('../../models/userAccessAddress')
-const { validateHolderInternal } = require('../../middleware/auth')
+const {
+  validateHolderInternal
+} = require('../../middleware/external/contractCalls')
 const {
   saveLoginAttemptsToDB,
   saveUserAccessAndReturnToken,

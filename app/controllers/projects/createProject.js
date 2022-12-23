@@ -3,8 +3,8 @@ const { createItem } = require('../../middleware/db')
 const { isIDGood, handleError } = require('../../middleware/utils')
 const { projectExistsByName } = require('./helpers')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
-const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
 const ethers = require('ethers')
+const { createProjectCall } = require('../../middleware/external/contractCalls')
 /**
  * Create item function called by route
  * @param {Object} req - request object
@@ -19,23 +19,6 @@ const createProject = async (req, res) => {
     const tokenEncrypted = req.headers.authorization
       .replace('Bearer ', '')
       .trim()
-    const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
-
-    const CONTRACT_ADDRESS =
-      process.env.CHAIN_ID in contractAddresses
-        ? contractAddresses[process.env.CHAIN_ID]
-        : null
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RPC_PROVIDER
-    )
-    let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
-
-    const racksPM = new ethers.Contract(
-      CONTRACT_ADDRESS.RacksProjectManager,
-      RacksPmAbi,
-      provider
-    )
-    let racksPMSigner = racksPM.connect(wallet)
 
     if (req.file)
       req.body.imageURL = process.env.API_URL + 'uploads/' + req.file.filename
@@ -50,13 +33,12 @@ const createProject = async (req, res) => {
     if (user.role === 'admin') req.body.approveStatus = 'ACTIVE'
     await createItem(req.body, PendingProject)
 
-    let tx = await racksPMSigner.createProject(
+    await createProjectCall(
       req.body.name,
       ethers.utils.parseEther(req.body.colateralCost + ''),
       req.body.reputationLevel,
       req.body.maxContributorsNumber
     )
-    await tx.wait()
     return res.status(200).json(true)
   } catch (error) {
     handleError(res, error)

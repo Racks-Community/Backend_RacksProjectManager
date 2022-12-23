@@ -27,7 +27,7 @@ const {
 const { discordInvite } = require('../controllers/auth/helpers/discordInvite')
 const { createLocalAdmin } = require('../middleware/auth/createLocalAdmin')
 const { getAdmin } = require('../middleware/auth/getAdmin')
-const { validateHolder } = require('../middleware/auth/validateHolder')
+const { validateHolder } = require('../middleware/external/contractCalls')
 
 /*
  * Auth routes

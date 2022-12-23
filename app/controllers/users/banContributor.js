@@ -3,18 +3,21 @@ const Project = require('../../models/project')
 const { matchedData } = require('express-validator')
 const { handleError } = require('../../middleware/utils')
 const { getItemSearch, updateItemSearch } = require('../../middleware/db')
-const { validateHolderInternal } = require('../../middleware/auth')
+const {
+  validateHolderInternal,
+  isWalletContributor,
+  setContributorStateToBanList,
+  isContributorBanned
+} = require('../../middleware/external/contractCalls')
 const { getItemsCustom } = require('../../middleware/db')
 const {
   banMemberFromGuild,
   unbanMemberFromGuild
-} = require('../../middleware/auth/discordManager')
+} = require('../../middleware/external/discordManager')
 const {
   blockOrganizationContributor,
   unblockOrganizationContributor
-} = require('../../middleware/auth/githubManager')
-const { contractAddresses, RacksPmAbi } = require('../../../web3Constants')
-const ethers = require('ethers')
+} = require('../../middleware/external/githubManager')
 
 /**
  * Update item function called by route
@@ -28,34 +31,13 @@ const banContributor = async (req, res) => {
     if (!isHolder)
       return res.status(404).json({ message: 'you need at least 1 token' })
 
-    const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
-
-    const CONTRACT_ADDRESS =
-      process.env.CHAIN_ID in contractAddresses
-        ? contractAddresses[process.env.CHAIN_ID]
-        : null
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RPC_PROVIDER
-    )
-    let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
-
-    const racksPM = new ethers.Contract(
-      CONTRACT_ADDRESS.RacksProjectManager,
-      RacksPmAbi,
-      provider
-    )
     let bannedState = req.banned == true
-    const isContributor = await racksPM.isWalletContributor(req.address)
+    const isContributor = await isWalletContributor(req.address)
     if (isContributor) {
       try {
-        let racksPMSigner = racksPM.connect(wallet)
-        let tx = await racksPMSigner.setContributorStateToBanList(
-          req.address,
-          bannedState
-        )
-        await tx.wait()
+        await setContributorStateToBanList(req.address, bannedState)
 
-        const isBanned = await racksPM.isContributorBanned(req.address)
+        const isBanned = await isContributorBanned(req.address)
         if (isBanned == bannedState) {
           let contributor = (
             await getItemSearch({ address: req.address }, User)
@@ -68,6 +50,11 @@ const banContributor = async (req, res) => {
                 const contrIndex = project.contributors.indexOf(contributor._id)
                 if (contrIndex > -1) {
                   project.contributors.splice(contrIndex, 1)
+                  if (
+                    project.contributors.length == 0 &&
+                    project.status == 'DOING'
+                  )
+                    project.status = 'CREATED'
                   await project.save()
                 }
               }

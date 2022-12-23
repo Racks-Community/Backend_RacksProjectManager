@@ -5,7 +5,7 @@ const { matchedData } = require('express-validator')
 const { getItemSearch } = require('../../middleware/db')
 const {
   getContributorsParticipation
-} = require('../../middleware/auth/githubManager')
+} = require('../../middleware/external/githubManager')
 const { projectExistsByAddress } = require('./helpers')
 
 /**

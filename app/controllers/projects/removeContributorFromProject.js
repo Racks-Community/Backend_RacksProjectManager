@@ -5,13 +5,15 @@ const { matchedData } = require('express-validator')
 const { getItemSearch } = require('../../middleware/db')
 const {
   removeRepositoryContributor
-} = require('../../middleware/auth/githubManager')
+} = require('../../middleware/external/githubManager')
 const {
   removeRolesFromMember
-} = require('../../middleware/auth/discordManager')
+} = require('../../middleware/external/discordManager')
 const { projectExistsByAddress } = require('./helpers')
-const { ProjectAbi } = require('../../../web3Constants')
-const ethers = require('ethers')
+const {
+  projectRemoveContributor,
+  isContributorInProject
+} = require('../../middleware/external/contractCalls')
 
 /**
  * Update item function called by route
@@ -26,25 +28,9 @@ const removeContributorFromProject = async (req, res) => {
       return res.status(404).send(false)
     }
 
-    const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
-
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RPC_PROVIDER
-    )
-
-    let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
-
-    const projectContract = new ethers.Contract(
+    await projectRemoveContributor(req.address, req.contributorAddress)
+    const isProjectContributor = await isContributorInProject(
       req.address,
-      ProjectAbi,
-      provider
-    )
-    let projectSigner = projectContract.connect(wallet)
-
-    let tx = await projectSigner.removeContributor(req.contributorAddress, true)
-    await tx.wait()
-
-    const isProjectContributor = await projectContract.isContributorInProject(
       req.contributorAddress
     )
     if (!isProjectContributor) {
@@ -59,6 +45,8 @@ const removeContributorFromProject = async (req, res) => {
         const contrIndex = projectModel.contributors.indexOf(contributor._id)
         projectModel.contributors.splice(contrIndex, 1)
         contributor.totalProjects--
+        if (projectModel.contributors.length == 0)
+          projectModel.status = 'CREATED'
         await contributor.save()
         const resData = await projectModel.save()
         if (process.env.DISCORD_BOT_TOKEN != 'void') {

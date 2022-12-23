@@ -1,23 +1,12 @@
 const fetch = require('node-fetch')
-const ethers = require('ethers')
-const { contractAddresses, RacksPmAbi } = require('./web3Constants')
+const {
+  getRacksProjectManagerContract
+} = require('./app/middleware/external/contractCalls')
 require('dotenv-safe').config()
 
 const startEventManager = async () => {
   try {
-    const CONTRACT_ADDRESS =
-      process.env.CHAIN_ID in contractAddresses
-        ? contractAddresses[process.env.CHAIN_ID]
-        : null
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RPC_PROVIDER
-    )
-    const racksPM = new ethers.Contract(
-      CONTRACT_ADDRESS.RacksProjectManager,
-      RacksPmAbi,
-      provider
-    )
-
+    const racksPM = await getRacksProjectManagerContract()
     const loginData = {
       email: process.env.EMAIL_FROM_ADDRESS,
       password: process.env.ADMIN_PASSWORD

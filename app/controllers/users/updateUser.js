@@ -2,7 +2,9 @@ const User = require('../../models/user')
 const { matchedData } = require('express-validator')
 const { isIDGood, handleError } = require('../../middleware/utils')
 const { updateItemSearch } = require('../../middleware/db')
-const { validateHolderInternal } = require('../../middleware/auth')
+const {
+  validateHolderInternal
+} = require('../../middleware/external/contractCalls')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
 /**
  * Update item function called by route

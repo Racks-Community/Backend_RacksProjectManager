@@ -3,13 +3,15 @@ const { matchedData } = require('express-validator')
 const { isIDGood, handleError } = require('../../middleware/utils')
 const { deleteItemSearch, getItemSearch } = require('../../middleware/db')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
-const { deleteRepository } = require('../../middleware/auth/githubManager')
+const { deleteRepository } = require('../../middleware/external/githubManager')
 const {
   deleteProjectChannels
-} = require('../../middleware/auth/discordManager')
+} = require('../../middleware/external/discordManager')
 const { projectExistsByAddress } = require('./helpers')
-const { ProjectAbi } = require('../../../web3Constants')
-const ethers = require('ethers')
+const {
+  deleteProjectCall,
+  projectIsDeleted
+} = require('../../middleware/external/contractCalls')
 
 /**
  * Delete item function called by route
@@ -36,26 +38,10 @@ const deleteProject = async (req, res) => {
       return res.status(404).send(false)
     }
 
-    const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY
-
-    const provider = new ethers.providers.JsonRpcProvider(
-      process.env.RPC_PROVIDER
-    )
-    let wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider)
-
-    const projectContract = new ethers.Contract(
-      req.address,
-      ProjectAbi,
-      provider
-    )
-    let projectSigner = projectContract.connect(wallet)
-
-    let tx = await projectSigner.deleteProject()
-    await tx.wait()
-
+    const tx = await deleteProjectCall(req.address)
     let deleteRes = false
     if (tx.hash) {
-      const isDeleted = await projectContract.isDeleted()
+      const isDeleted = await projectIsDeleted(req.address)
       if (isDeleted) {
         const owner = await findUserById(project.owner + '')
         if (owner.role === 'user') {
