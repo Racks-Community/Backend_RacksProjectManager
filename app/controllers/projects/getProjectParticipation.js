@@ -2,7 +2,7 @@ const Project = require('../../models/project')
 const User = require('../../models/user')
 const { handleError } = require('../../middleware/utils')
 const { matchedData } = require('express-validator')
-const { getItemSearch } = require('../../middleware/db')
+const { getItem, getItemSearch } = require('../../middleware/db')
 const {
   getContributorsParticipation
 } = require('../../middleware/external/githubManager')
@@ -21,16 +21,30 @@ const getProjectParticipation = async (req, res) => {
       return res.status(404).send(false)
     }
 
-    let participations = []
     let project = (await getItemSearch({ address: req.address }, Project))[0]
 
+    let contrParticipations = []
+    if (!project.isProgramming && project.contributors.length > 0) {
+      for (let contr of project.contributors) {
+        let contributor = await getItem(contr, User)
+        if (contributor) {
+          contrParticipations.push({
+            name: contributor.discord,
+            address: contributor.address,
+            participation: 100 / project.contributors.length
+          })
+        }
+      }
+      return res.status(200).send(contrParticipations)
+    }
+
+    let participations = []
     if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
       participations = await getContributorsParticipation(project.name)
     }
     if (!participations)
       return res.status(409).send('Project repository is empty.')
 
-    let contrParticipations = []
     for (let [i, contribution] of participations.entries()) {
       let contributor = (
         await getItemSearch(

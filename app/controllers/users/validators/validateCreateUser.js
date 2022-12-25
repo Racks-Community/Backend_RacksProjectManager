@@ -40,11 +40,8 @@ const validateCreateUser = [
     .withMessage('USER_NOT_IN_KNOWN_ROLE'),
   check('country').optional(),
   check('discord').optional(),
+  check('githubUsername').optional(),
   check('urlTwitter')
-    .optional()
-    .custom((v) => (v === '' ? true : validator.isURL(v)))
-    .withMessage('NOT_A_VALID_URL'),
-  check('urlGitHub')
     .optional()
     .custom((v) => (v === '' ? true : validator.isURL(v)))
     .withMessage('NOT_A_VALID_URL'),

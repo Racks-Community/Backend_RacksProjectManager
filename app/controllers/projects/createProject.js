@@ -1,5 +1,5 @@
 const PendingProject = require('../../models/pendingProject')
-const { createItem } = require('../../middleware/db')
+const { createItem, deleteItemSearch } = require('../../middleware/db')
 const { isIDGood, handleError } = require('../../middleware/utils')
 const { projectExistsByName } = require('./helpers')
 const { getUserIdFromToken, findUserById } = require('../auth/helpers')
@@ -41,6 +41,7 @@ const createProject = async (req, res) => {
     )
     return res.status(200).json(true)
   } catch (error) {
+    await deleteItemSearch({ name: req.body.name }, PendingProject)
     handleError(res, error)
   }
 }

@@ -19,6 +19,13 @@ const validateCreateProject = [
     .isEmpty()
     .withMessage('IS_EMPTY')
     .trim(),
+  check('isProgramming')
+    .exists()
+    .withMessage('MISSING')
+    .not()
+    .isEmpty()
+    .withMessage('IS_EMPTY')
+    .trim(),
   check('reputationLevel')
     .exists()
     .withMessage('MISSING')

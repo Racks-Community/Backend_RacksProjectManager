@@ -36,6 +36,7 @@ const createProjectWebhook = async (req, res) => {
         details: pendingProject.details || '',
         requirements: pendingProject.requirements,
         visibleForAll: pendingProject.visibleForAll || false,
+        isProgramming: pendingProject.isProgramming,
         githubRepository: pendingProject.githubRepository || ''
       }
       await deleteItemSearch({ name: req.newProjectName }, PendingProject)

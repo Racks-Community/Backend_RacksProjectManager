@@ -61,6 +61,10 @@ const EventSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    isProgramming: {
+      type: Boolean,
+      default: true
+    },
     githubRepository: {
       type: String,
       validate: {

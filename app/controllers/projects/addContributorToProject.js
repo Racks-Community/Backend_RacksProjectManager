@@ -49,7 +49,10 @@ const addContributorToProject = async (req, res) => {
         if (process.env.DISCORD_BOT_TOKEN != 'void') {
           await grantRolesToMember(projectModel.name, contributor.discord)
         }
-        if (process.env.GITHUB_ACCESS_TOKEN != 'void') {
+        if (
+          process.env.GITHUB_ACCESS_TOKEN != 'void' &&
+          projectModel.isProgramming
+        ) {
           await addRepositoryContributor(
             projectModel.name,
             contributor.githubUsername
