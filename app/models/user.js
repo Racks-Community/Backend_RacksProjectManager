@@ -56,8 +56,7 @@ const UserSchema = new mongoose.Schema(
     },
     githubUsername: {
       type: String,
-      unique: true,
-      sparse: true
+      required: true
     },
     country: {
       type: String
