@@ -31,7 +31,8 @@ const getProjectParticipation = async (req, res) => {
           contrParticipations.push({
             name: contributor.discord,
             address: contributor.address,
-            participation: 100 / project.contributors.length
+            participation:
+              Math.round((100 / project.contributors.length) * 10) / 10
           })
         }
       }

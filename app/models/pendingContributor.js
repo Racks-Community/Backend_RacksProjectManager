@@ -26,8 +26,7 @@ const EventSchema = new mongoose.Schema(
       required: true
     },
     githubUsername: {
-      type: String,
-      required: true
+      type: String
     },
     urlTwitter: {
       type: String,
