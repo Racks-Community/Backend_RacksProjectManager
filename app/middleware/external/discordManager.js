@@ -8,10 +8,10 @@ const {
 
 const guildId = process.env.DISCORD_GUILD_ID
 
-const createChannels = async (name) => {
+const createChannels = async (name, owner) => {
   return new Promise((resolve, reject) => {
     try {
-      if (!name) {
+      if (!name || !owner) {
         return reject(null)
       }
       const client = new Client({
@@ -75,6 +75,9 @@ const createChannels = async (name) => {
             type: ChannelType.GuildVoice,
             parent: category.id
           })
+
+          if (owner.role === 'user')
+            await grantRolesToMember(name, owner.discord)
           resolve()
         } catch (e) {
           reject(e)

@@ -26,10 +26,6 @@ const createProject = async (req, res) => {
     let userId = await getUserIdFromToken(tokenEncrypted)
     userId = await isIDGood(userId)
     const user = await findUserById(userId)
-    if (user.role === 'user' && user.ownedProjects >= 3)
-      return res
-        .status(409)
-        .send('User cannot own more than 3 projects at the same time')
     if (user.role === 'admin') req.body.approveStatus = 'ACTIVE'
     await createItem(req.body, PendingProject)
 

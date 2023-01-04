@@ -1,4 +1,5 @@
 const Project = require('../../models/project')
+const User = require('../../models/user')
 const { getItemSearch } = require('../../middleware/db')
 const { createRepository } = require('../../middleware/external/githubManager')
 const { createChannels } = require('../../middleware/external/discordManager')
@@ -6,6 +7,7 @@ const {
   approveProject,
   projectIsActive
 } = require('../../middleware/external/contractCalls')
+const { findUserById } = require('../auth/helpers')
 
 const approveProjectInternal = async (projectAddress, approve) => {
   return new Promise(async (resolve, reject) => {
@@ -35,8 +37,9 @@ const approveProjectInternal = async (projectAddress, approve) => {
               projectModel.name
             )
           }
+          const user = await findUserById(projectModel.owner)
           if (process.env.DISCORD_BOT_TOKEN != 'void') {
-            await createChannels(projectModel.name)
+            await createChannels(projectModel.name, user)
           }
           resolve(await projectModel.save())
         }
