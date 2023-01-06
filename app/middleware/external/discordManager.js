@@ -8,6 +8,13 @@ const {
 
 const guildId = process.env.DISCORD_GUILD_ID
 
+const formatUsername = (username) => {
+  if (username.includes('#')) {
+    username = username.split('#')[0]
+  }
+  return username
+}
+
 const createChannels = async (name, owner) => {
   return new Promise((resolve, reject) => {
     try {
@@ -96,6 +103,7 @@ const grantRolesToMember = async (projectName, username) => {
     if (!username || !projectName) {
       return reject(null)
     }
+    username = formatUsername(username)
     const client = new Client({
       intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
     })
@@ -124,6 +132,7 @@ const removeRolesFromMember = async (projectName, username) => {
     if (!username || !projectName) {
       return reject(null)
     }
+    username = formatUsername(username)
     const client = new Client({
       intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
     })
@@ -152,6 +161,7 @@ const banMemberFromGuild = async (username) => {
     if (!username) {
       return reject(null)
     }
+    username = formatUsername(username)
     const client = new Client({
       intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
     })
@@ -179,6 +189,7 @@ const unbanMemberFromGuild = async (username) => {
     if (!username) {
       return reject(null)
     }
+    username = formatUsername(username)
     const client = new Client({
       intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
     })
