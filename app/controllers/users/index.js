@@ -6,6 +6,7 @@ const { getUserFromId } = require('./getUserFromId')
 const { getUsers } = require('./getUsers')
 const { updateUser } = require('./updateUser')
 const { updateUserToContributor } = require('./updateUserToContributor')
+const { modifyContributorReputation } = require('./modifyContributorReputation')
 const {
   updateUserToContributorWebhook
 } = require('./updateUserToContributorWebhook')
@@ -21,5 +22,6 @@ module.exports = {
   updateUser,
   updateUserToContributor,
   updateUserToContributorWebhook,
+  modifyContributorReputation,
   banContributor
 }

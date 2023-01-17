@@ -166,6 +166,22 @@ const isContributorBanned = (contributorAddress) => {
   })
 }
 
+const getContributorDataByAddress = (contributorAddress) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!contributorAddress) {
+        return reject(null)
+      }
+      const racksPM = await getRacksProjectManagerContract()
+      const contr = await racksPM.getContributorData(contributorAddress)
+      resolve(contr)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
 // RACKS PROJECT MANAGER ADMIN
 
 const createProjectCall = (
@@ -202,7 +218,10 @@ const createProjectCall = (
   })
 }
 
-const setContributorStateToBanList = (contributorAddress, bannedState) => {
+const setContributorStateToBanList = (
+  contributorAddress,
+  bannedState = true
+) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!contributorAddress) {
@@ -214,6 +233,29 @@ const setContributorStateToBanList = (contributorAddress, bannedState) => {
       let tx = await racksPMSigner.setContributorStateToBanList(
         contributorAddress,
         bannedState
+      )
+      await tx.wait()
+      resolve(tx)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+const modifyContributorRP = (contributorAddress, points, add = true) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!contributorAddress || !points) {
+        return reject(null)
+      }
+      const racksPM = await getRacksProjectManagerContract()
+      const wallet = await getAdminWallet()
+      let racksPMSigner = racksPM.connect(wallet)
+      let tx = await racksPMSigner.modifyContributorRP(
+        contributorAddress,
+        points,
+        add
       )
       await tx.wait()
       resolve(tx)
@@ -499,8 +541,10 @@ module.exports = {
   getProjectContract,
   isWalletContributor,
   isContributorBanned,
+  getContributorDataByAddress,
   createProjectCall,
   setContributorStateToBanList,
+  modifyContributorRP,
   deleteProjectCall,
   approveProject,
   finishProject,

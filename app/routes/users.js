@@ -19,7 +19,8 @@ const {
   updateUserToContributorWebhook,
   banContributor,
   deleteUser,
-  deletePendingContributor
+  deletePendingContributor,
+  modifyContributorReputation
 } = require('../controllers/users')
 
 const {
@@ -30,6 +31,7 @@ const {
   validateUpdateUserToContributor,
   validateUpdateUserToContributorWebhook,
   validateDeleteUser,
+  validateModifyContributorReputation,
   validateBanUser
 } = require('../controllers/users/validators')
 
@@ -130,6 +132,18 @@ router.patch(
   trimRequest.all,
   validateBanUser,
   banContributor
+)
+
+/*
+ * Modify User Reputation
+ */
+router.patch(
+  '/reputation/:address',
+  requireAuth,
+  roleAuthorization(['admin']),
+  trimRequest.all,
+  validateModifyContributorReputation,
+  modifyContributorReputation
 )
 
 /*

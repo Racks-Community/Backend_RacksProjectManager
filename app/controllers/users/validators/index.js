@@ -10,6 +10,9 @@ const {
   validateUpdateUserToContributorWebhook
 } = require('./validateUpdateUserToContributorWebhook')
 const { validateBanUser } = require('./validateBanUser')
+const {
+  validateModifyContributorReputation
+} = require('./validateModifyContributorReputation')
 
 module.exports = {
   validateCreateUser,
@@ -19,5 +22,6 @@ module.exports = {
   validateUpdateUser,
   validateUpdateUserToContributor,
   validateUpdateUserToContributorWebhook,
+  validateModifyContributorReputation,
   validateBanUser
 }
