@@ -59,6 +59,7 @@ const completeProject = async (req, res) => {
         contributor.reputationPoints = ethers.BigNumber.from(
           contributorOnChain.reputationPoints
         ).toNumber()
+        contributor.totalProjects++
         await contributor.save()
         await projectModel.save()
       }

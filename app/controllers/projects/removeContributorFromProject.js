@@ -44,7 +44,6 @@ const removeContributorFromProject = async (req, res) => {
 
         const contrIndex = projectModel.contributors.indexOf(contributor._id)
         projectModel.contributors.splice(contrIndex, 1)
-        contributor.totalProjects--
         if (projectModel.contributors.length == 0)
           projectModel.status = 'CREATED'
         await contributor.save()

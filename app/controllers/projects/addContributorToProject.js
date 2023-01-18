@@ -41,7 +41,6 @@ const addContributorToProject = async (req, res) => {
           return res.status(500).send()
         }
 
-        contributor.totalProjects++
         await contributor.save()
         projectModel.contributors.push(contributor)
         projectModel.status = 'DOING'
