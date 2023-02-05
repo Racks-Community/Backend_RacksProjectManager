@@ -3,6 +3,9 @@ const {
   validateCreateProjectWebhook
 } = require('./validateCreateProjectWebhook')
 const { validateDeleteProject } = require('./validateDeleteProject')
+const {
+  validateDeletePendingProject
+} = require('./validateDeletePendingProject')
 const { validateGetProject } = require('./validateGetProject')
 const { validateUpdateProject } = require('./validateUpdateProject')
 const { validateApproveProject } = require('./validateApproveProject')
@@ -19,6 +22,7 @@ module.exports = {
   validateCreateProject,
   validateCreateProjectWebhook,
   validateDeleteProject,
+  validateDeletePendingProject,
   validateGetProject,
   validateUpdateProject,
   validateCompleteProject,

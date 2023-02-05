@@ -31,7 +31,7 @@ const startEventManager = async () => {
     }
 
     racksPM.on(
-      'newProjectCreated',
+      'NewProjectCreated',
       async (newProjectName, newProjectAddress) => {
         const token = await getToken()
 
@@ -52,7 +52,7 @@ const startEventManager = async () => {
       }
     )
 
-    racksPM.on('newContributorRegistered', async (newContributorAddress) => {
+    racksPM.on('NewContributorRegistered', async (newContributorAddress) => {
       const token = await getToken()
 
       if (token) {

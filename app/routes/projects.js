@@ -18,6 +18,7 @@ const {
   removeContributorFromProject,
   completeProject,
   deleteProject,
+  deletePendingProject,
   approveProject,
   fundProjectWebhook,
   getProjectParticipation
@@ -33,6 +34,7 @@ const {
   validateCompleteProject,
   validateFundProject,
   validateDeleteProject,
+  validateDeletePendingProject,
   validateRemoveContributorFromProject
 } = require('../controllers/projects/validators')
 
@@ -185,6 +187,15 @@ router.delete(
   trimRequest.all,
   validateDeleteProject,
   deleteProject
+)
+
+router.delete(
+  '/pending/:name',
+  requireAuth,
+  roleAuthorization(['user', 'admin']),
+  trimRequest.all,
+  validateDeletePendingProject,
+  deletePendingProject
 )
 
 module.exports = router

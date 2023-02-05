@@ -29,12 +29,13 @@ const createProject = async (req, res) => {
     if (user.role === 'admin') req.body.approveStatus = 'ACTIVE'
     await createItem(req.body, PendingProject)
 
-    await createProjectCall(
-      req.body.name,
-      ethers.utils.parseEther(req.body.colateralCost + ''),
-      req.body.reputationLevel,
-      req.body.maxContributorsNumber
-    )
+    if (user.role === 'admin')
+      await createProjectCall(
+        req.body.name,
+        ethers.utils.parseEther(req.body.colateralCost + ''),
+        req.body.reputationLevel,
+        req.body.maxContributorsNumber
+      )
     return res.status(200).json(true)
   } catch (error) {
     await deleteItemSearch({ name: req.body.name }, PendingProject)
