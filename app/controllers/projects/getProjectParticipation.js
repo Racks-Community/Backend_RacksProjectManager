@@ -30,7 +30,7 @@ const getProjectParticipation = async (req, res) => {
         if (contributor) {
           contrParticipations.push({
             name: contributor.discord,
-            address: contributor.address,
+            contributor: contributor.address,
             participation: Math.round(100 / project.contributors.length)
           })
         }
@@ -54,7 +54,7 @@ const getProjectParticipation = async (req, res) => {
       )[0]
       if (contributor) {
         let contr = contribution
-        contr.address = contributor.address
+        contr.contributor = contributor.address
         contr.participation = Math.trunc(contribution.participation)
         contrParticipations.push(contr)
       }

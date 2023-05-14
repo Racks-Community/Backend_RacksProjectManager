@@ -17,14 +17,7 @@ const validateCompleteProject = [
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
-  check('contributors')
-    .isArray({ min: 1 })
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY'),
-  check('participationWeights')
+  check('contributorParticipation')
     .isArray({ min: 1 })
     .exists()
     .withMessage('MISSING')

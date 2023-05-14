@@ -32,8 +32,7 @@ const completeProject = async (req, res) => {
     await finishProject(
       req.address,
       req.totalReputationPointsReward,
-      req.contributors,
-      req.participationWeights
+      req.contributorParticipation
     )
 
     const completed = await projectIsFinished(req.address)

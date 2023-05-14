@@ -376,16 +376,14 @@ const approveProject = (projectAddress) => {
 const finishProject = (
   projectAddress,
   totalReputationPointsReward,
-  contributors,
-  participationWeights
+  contributorParticipation
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (
         !projectAddress ||
         !totalReputationPointsReward ||
-        !contributors ||
-        !participationWeights
+        !contributorParticipation
       ) {
         return reject(null)
       }
@@ -394,8 +392,7 @@ const finishProject = (
       let projectSigner = projectContract.connect(wallet)
       let tx = await projectSigner.finishProject(
         totalReputationPointsReward,
-        contributors,
-        participationWeights
+        contributorParticipation
       )
       await tx.wait()
       resolve(tx)
