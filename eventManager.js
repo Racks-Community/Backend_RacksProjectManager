@@ -32,7 +32,7 @@ const startEventManager = async () => {
 
     racksPM.on(
       'NewProjectCreated',
-      async (newProjectName, newProjectAddress) => {
+      async (newProjectNameBytes, newProjectName, newProjectAddress) => {
         const token = await getToken()
 
         if (token) {
