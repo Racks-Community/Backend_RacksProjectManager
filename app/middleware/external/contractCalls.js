@@ -390,6 +390,14 @@ const finishProject = (
       const projectContract = await getProjectContract(projectAddress)
       const wallet = await getAdminWallet()
       let projectSigner = projectContract.connect(wallet)
+      const numContributors = Number(
+        await projectContract.getNumberOfContributors()
+      )
+      const isFinished = await projectContract.isFinished()
+      if (contributorParticipation.length !== numContributors)
+        return reject(null)
+      if (isFinished) return reject(null)
+
       let tx = await projectSigner.finishProject(
         totalReputationPointsReward,
         contributorParticipation
@@ -448,12 +456,20 @@ const ProjectGetContributorByAddress = (projectAddress, contributorAddress) => {
         return reject(null)
       }
       const projectContract = await getProjectContract(projectAddress)
+      const racksPMContract = await getRacksProjectManagerContract()
       const wallet = await getAdminWallet()
       let projectSigner = projectContract.connect(wallet)
-      const contributorOnChain = await projectSigner.getContributorByAddress(
+      let contributorOnChain = await projectSigner.getContributorByAddress(
         contributorAddress
       )
-      resolve(contributorOnChain)
+
+      const level = Number(
+        await racksPMContract.calculateLevel(
+          contributorOnChain.reputationPoints
+        )
+      )
+      const data = { ...contributorOnChain, reputationLevel: level }
+      resolve(data)
     } catch (error) {
       console.log(error)
       reject(error)

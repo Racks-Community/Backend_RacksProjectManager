@@ -33,8 +33,8 @@ const createProject = async (req, res) => {
       await createProjectCall(
         req.body.name,
         ethers.utils.parseEther(req.body.colateralCost + ''),
-        req.body.reputationLevel,
-        req.body.maxContributorsNumber
+        Number(req.body.reputationLevel),
+        Number(req.body.maxContributorsNumber)
       )
     return res.status(200).json(true)
   } catch (error) {

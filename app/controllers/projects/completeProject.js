@@ -29,21 +29,24 @@ const completeProject = async (req, res) => {
       return res.status(404).send(false)
     }
 
-    await finishProject(
-      req.address,
-      req.totalReputationPointsReward,
-      req.contributorParticipation
-    )
+    let completed = await projectIsFinished(req.address)
 
-    const completed = await projectIsFinished(req.address)
+    if (!completed) {
+      await finishProject(
+        req.address,
+        Number(req.totalReputationPointsReward),
+        req.contributorParticipation
+      )
+      completed = await projectIsFinished(req.address)
+    }
     if (completed) {
       let projectModel = (
         await getItemSearch({ address: req.address }, Project)
       )[0]
+      let participationWeights = []
       projectModel.completed = true
       projectModel.status = 'FINISHED'
       projectModel.completedAt = new Date()
-      projectModel.participationWeights = req.participationWeights
       for (let contrWallet of projectModel.contributors) {
         let contributor = (
           await getItemSearch({ _id: contrWallet + '' }, User)
@@ -59,9 +62,15 @@ const completeProject = async (req, res) => {
           contributorOnChain.reputationPoints
         ).toNumber()
         contributor.totalProjects++
+        participationWeights.push(
+          req.contributorParticipation[
+            projectModel.contributors.indexOf(contrWallet)
+          ].participation
+        )
         await contributor.save()
-        await projectModel.save()
       }
+      projectModel.participationWeights = participationWeights
+      await projectModel.save()
       res.status(200).json(true)
     } else {
       res.status(500).json('No Completed')
