@@ -455,18 +455,15 @@ const ProjectGetContributorByAddress = (projectAddress, contributorAddress) => {
       if (!projectAddress || !contributorAddress) {
         return reject(null)
       }
-      const projectContract = await getProjectContract(projectAddress)
       const racksPMContract = await getRacksProjectManagerContract()
       const wallet = await getAdminWallet()
-      let projectSigner = projectContract.connect(wallet)
-      let contributorOnChain = await projectSigner.getContributorByAddress(
+      let racksPMSigner = racksPMContract.connect(wallet)
+      let contributorOnChain = await racksPMSigner.getContributorData(
         contributorAddress
       )
 
       const level = Number(
-        await racksPMContract.calculateLevel(
-          contributorOnChain.reputationPoints
-        )
+        await racksPMSigner.getContributorLevel(contributorAddress)
       )
       const data = { ...contributorOnChain, reputationLevel: level }
       resolve(data)
